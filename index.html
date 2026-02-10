@@ -62,6 +62,7 @@
 <script>
     function formatarMoeda(valor) {
         if (!valor || isNaN(valor)) return "";
+        // Garante o padrão brasileiro: 1.250,55
         return valor.toLocaleString('pt-BR', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
     }
 
@@ -69,6 +70,7 @@
         const getValRaw = (id) => {
             let val = document.getElementById(id).value;
             if (!val) return 0;
+            // Remove pontos de milhar e troca vírgula por ponto para o parseFloat
             let cleanVal = val.replace(/\./g, '').replace(',', '.');
             return parseFloat(cleanVal) || 0;
         };
@@ -80,7 +82,7 @@
         let numPor = getValRaw('precoPor');
         let descCalculado = "";
 
-        // Cálculo Automático de Desconto
+        // Cálculo Automático de Desconto para a Central do Vitilho
         if (numDe > 0 && numPor > 0) {
             let calculo = Math.round(((numDe - numPor) / numDe) * 100);
             descCalculado = (calculo > 0) ? `-${calculo}%` : `0%`;
@@ -95,10 +97,11 @@
 
         if(p('cupom')) postagem += `🏷️ Cupom: *${p('cupom').toUpperCase()}*\n`;
         
-        // Preço De com tachado: ~R$ 0,00~
-        if(precoDeFormatado) postagem += `💰 De: ~R$ ${precoDeFormatado}~\n`;
+        // CORREÇÃO: Aplicação manual dos caracteres nos valores formatados
+        if(precoDeFormatado) {
+            postagem += `💰 De: ~R$ ${precoDeFormatado}~\n`;
+        }
         
-        // Preço Por com negrito: *R$ 0,00*
         if(precoPorFormatado) {
             let tagDesc = descCalculado ? ` \`${descCalculado}\`` : "";
             postagem += `🔥 Por: *R$ ${precoPorFormatado}*${tagDesc}\n`;
