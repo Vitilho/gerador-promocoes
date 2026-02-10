@@ -43,6 +43,11 @@
     
     <label>Parcelamento</label>
     <input type="text" id="parcelas" placeholder="10x de R$ 226,95 SEM JUROS" oninput="update()">
+
+    <label style="display: flex; align-items: center; gap: 8px; cursor: pointer; margin-top: 15px;">
+    <input type="checkbox" id="freteGratis" onchange="update()" checked style="width: auto; margin: 0;"> 
+            Possui Frete Grátis?
+    </label>
     
     <label>Link</label>
     <input type="text" id="link" placeholder="https://..." oninput="update()">
@@ -61,38 +66,41 @@
 
 <script>
     function update() {
-        const getVal = (id) => document.getElementById(id).value.replace('.', '').replace(',', '.');
-        const p = (id) => document.getElementById(id).value;
-        
-        // Lógica de Cálculo Automático de Desconto
-        let precoDe = parseFloat(getVal('precoDe'));
-        let precoPor = parseFloat(getVal('precoPor'));
-        let descFinal = p('desconto');
+    const getVal = (id) => document.getElementById(id).value.replace('.', '').replace(',', '.');
+    const p = (id) => document.getElementById(id).value;
+    const temFrete = document.getElementById('freteGratis').checked; // Captura o estado do checkbox
+    
+    let precoDe = parseFloat(getVal('precoDe'));
+    let precoPor = parseFloat(getVal('precoPor'));
+    let descFinal = p('desconto');
 
-        if (precoDe > 0 && precoPor > 0 && !p('desconto')) {
-            let calculo = Math.round(((precoDe - precoPor) / precoDe) * 100);
-            descFinal = `-${calculo}`;
-        }
-
-        // Montagem do Layout
-        let postagem = `✅ ${p('produto')}\n`;
-        if(p('comentarioProd')) postagem += `> ${p('comentarioProd')}\n\n`;
-        else postagem += `\n`;
-
-        if(p('cupom')) postagem += `🏷️ Cupom: *${p('cupom').toUpperCase()}*\n`;
-        if(p('precoDe')) postagem += `💰 De: R$ ${p('precoDe')}\n`;
-        
-        postagem += `🔥 Por: R$ ${p('precoPor')} \`${descFinal}%\`\n`;
-        
-        if(p('parcelas')) postagem += `💳 Parcelamento: ${p('parcelas')}\n`;
-        
-        postagem += `🚚 Frete Grátis\n\n`;
-        postagem += `🔗 ${p('link')}\n`;
-        
-        if(p('loja')) postagem += `> ${p('loja')}`;
-
-        document.getElementById('result').innerText = postagem;
+    if (precoDe > 0 && precoPor > 0 && !p('desconto')) {
+        let calculo = Math.round(((precoDe - precoPor) / precoDe) * 100);
+        descFinal = (calculo > 0) ? `-${calculo}` : `0`;
     }
+
+    let postagem = `✅ ${p('produto')}\n`;
+    if(p('comentarioProd')) postagem += `> ${p('comentarioProd')}\n\n`;
+    else postagem += `\n`;
+
+    if(p('cupom')) postagem += `🏷️ Cupom: *${p('cupom').toUpperCase()}*\n`;
+    if(p('precoDe')) postagem += `💰 De: R$ ${p('precoDe')}\n`;
+    
+    postagem += `🔥 Por: R$ ${p('precoPor')} \`${descFinal}%\`\n`;
+    
+    if(p('parcelas')) postagem += `💳 Parcelamento: ${p('parcelas')}\n`;
+    
+    // Lógica do Frete Grátis
+    if (temFrete) {
+        postagem += `🚚 Frete Grátis\n`;
+    }
+    
+    postagem += `\n🔗 ${p('link')}\n`;
+    
+    if(p('loja')) postagem += `> ${p('loja')}`;
+
+    document.getElementById('result').innerText = postagem;
+}
 
     function copyToClipboard() {
         const text = document.getElementById('result').innerText;
