@@ -10,9 +10,8 @@
         .preview-container { flex-grow: 1; background: #eef2f7; padding: 20px; border-radius: 8px; position: sticky; top: 20px; height: fit-content; }
         h2 { font-size: 1.2rem; margin-top: 0; color: #333; }
         label { display: block; margin-top: 10px; font-weight: bold; font-size: 0.85rem; }
-        input, textarea { width: 100%; padding: 8px; margin-top: 5px; border: 1px solid #ccc; border-radius: 4px; box-sizing: border-box; }
-        textarea { height: 60px; resize: none; }
-        .output { background: white; padding: 15px; border: 1px solid #ddd; border-radius: 4px; white-space: pre-wrap; margin-bottom: 15px; font-family: 'Segoe UI Emoji', sans-serif; }
+        input { width: 100%; padding: 8px; margin-top: 5px; border: 1px solid #ccc; border-radius: 4px; box-sizing: border-box; }
+        .output { background: white; padding: 15px; border: 1px solid #ddd; border-radius: 4px; white-space: pre-wrap; margin-bottom: 15px; font-family: 'Segoe UI Emoji', sans-serif; min-height: 200px; }
         button { width: 100%; padding: 10px; margin-top: 10px; cursor: pointer; border: none; border-radius: 4px; font-weight: bold; }
         .btn-copy { background-color: #28a745; color: white; }
         .btn-clear { background-color: #dc3545; color: white; }
@@ -24,13 +23,13 @@
     <h2>🛠 Dados da Promoção</h2>
     
     <label>Produto</label>
-    <input type="text" id="produto" placeholder="Ex: Galaxy Nvidia Geforce RTX 5060" oninput="update()" autofocus>
+    <input type="text" id="produto" placeholder="Ex: RTX 5060" oninput="update()" autofocus>
     
     <label>Comentário Produto</label>
-    <input type="text" id="comentarioProd" placeholder="Ex: A melhor custo beneficio..." oninput="update()">
+    <input type="text" id="comentarioProd" oninput="update()">
     
     <label>Cupom</label>
-    <input type="text" id="cupom" placeholder="Ex: MELI25" oninput="update()">
+    <input type="text" id="cupom" oninput="update()">
     
     <label>Preço De (R$)</label>
     <input type="text" id="precoDe" placeholder="3.999,00" oninput="update()">
@@ -39,21 +38,20 @@
     <input type="text" id="precoPor" placeholder="2.269,55" oninput="update()">
     
     <label>Desconto (%)</label>
-    <input type="text" id="desconto" placeholder="-43" oninput="update()">
+    <input type="text" id="desconto" placeholder="Ex: -43" oninput="update()">
     
     <label>Parcelamento</label>
-    <input type="text" id="parcelas" placeholder="10x de R$ 226,95 SEM JUROS" oninput="update()">
+    <input type="text" id="parcelas" placeholder="10x de R$ 226,95" oninput="update()">
 
     <label style="display: flex; align-items: center; gap: 8px; cursor: pointer; margin-top: 15px;">
-    <input type="checkbox" id="freteGratis" onchange="update()" checked style="width: auto; margin: 0;"> 
-            Possui Frete Grátis?
+        <input type="checkbox" id="freteGratis" onchange="update()" checked style="width: auto;"> Possui Frete Grátis?
     </label>
     
     <label>Link</label>
-    <input type="text" id="link" placeholder="https://..." oninput="update()">
+    <input type="text" id="link" oninput="update()">
     
     <label>Loja/Vendedor</label>
-    <input type="text" id="loja" placeholder="Ex: Loja Oficial, TNT Info" oninput="update()">
+    <input type="text" id="loja" oninput="update()">
 
     <button class="btn-clear" onclick="clearFields()">Limpar Tudo</button>
 </div>
@@ -66,8 +64,7 @@
 
 <script>
     function formatarMoeda(valor) {
-        if (isNaN(valor) || valor === 0) return "";
-        // Formata para o padrão brasileiro: milhar com ponto e decimal com vírgula
+        if (!valor || isNaN(valor)) return "";
         return valor.toLocaleString('pt-BR', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
     }
 
@@ -75,8 +72,6 @@
         const getValRaw = (id) => {
             let val = document.getElementById(id).value;
             if (!val) return 0;
-            // Remove tudo que não é número ou vírgula, depois troca vírgula por ponto
-            // Isso permite que o parseFloat entenda o valor para o cálculo
             let cleanVal = val.replace(/\./g, '').replace(',', '.');
             return parseFloat(cleanVal) || 0;
         };
@@ -89,19 +84,17 @@
         let descManual = p('desconto');
         let descCalculado = "";
 
-        // Cálculo do desconto (regra de negócio para a Central do Vitilho)
         if (numDe > 0 && numPor > 0) {
             if (descManual) {
-                descCalculado = descManual;
+                descCalculado = descManual.includes('%') ? descManual : `-${descManual.replace('-', '')}%`;
             } else {
                 let calculo = Math.round(((numDe - numPor) / numDe) * 100);
                 descCalculado = (calculo > 0) ? `-${calculo}%` : `0%`;
             }
         } else if (descManual) {
-            descCalculado = descManual.includes('%') ? descManual : `${descManual}%`;
+            descCalculado = descManual.includes('%') ? descManual : `-${descManual.replace('-', '')}%`;
         }
 
-        // Formatação para exibição final
         const precoDeFormatado = formatarMoeda(numDe);
         const precoPorFormatado = formatarMoeda(numPor);
 
@@ -110,21 +103,11 @@
         else postagem += `\n`;
 
         if(p('cupom')) postagem += `🏷️ Cupom: *${p('cupom').toUpperCase()}*\n`;
-        
         if(precoDeFormatado) postagem += `💰 De: R$ ${precoDeFormatado}\n`;
-        
-        if(precoPorFormatado) {
-            postagem += `🔥 Por: R$ ${precoPorFormatado} \`${descCalculado}\`\n`;
-        }
-        
+        if(precoPorFormatado) postagem += `🔥 Por: R$ ${precoPorFormatado} \`${descCalculado}\`\n`;
         if(p('parcelas')) postagem += `💳 Parcelamento: ${p('parcelas')}\n`;
-        
-        if (temFrete) {
-            postagem += `🚚 Frete Grátis\n`;
-        }
-        
+        if(temFrete) postagem += `🚚 Frete Grátis\n`;
         if(p('link')) postagem += `\n🔗 ${p('link')}\n`;
-        
         if(p('loja')) postagem += `> ${p('loja')}`;
 
         document.getElementById('result').innerText = postagem;
@@ -143,12 +126,14 @@
         document.querySelectorAll('input').forEach(i => i.value = '');
         document.getElementById('freteGratis').checked = true;
         update();
-            
         document.getElementById('produto').focus();
     }
 
-    update();
-    document.getElementById('produto').focus();
+    // Inicialização
+    window.onload = () => {
+        update();
+        document.getElementById('produto').focus();
+    };
 </script>
 
 </body>
