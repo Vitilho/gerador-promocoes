@@ -65,42 +65,45 @@
 </div>
 
 <script>
-    function update() {
-        // Função para tratar valores numéricos
-        const getVal = (id) => {
-            const el = document.getElementById(id);
-            return el ? el.value.replace(/\./g, '').replace(',', '.') : '';
-        };
-        
-        const p = (id) => {
-            const el = document.getElementById(id);
-            return el ? el.value : '';
-        };
+    function formatarMoeda(valor) {
+        if (isNaN(valor) || valor === 0) return "";
+        return valor.toLocaleString('pt-BR', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+    }
 
-        const freteCheck = document.getElementById('freteGratis');
-        const temFrete = freteCheck ? freteCheck.checked : false;
+    function update() {
+        const getValRaw = (id) => {
+            const val = document.getElementById(id).value;
+            // Remove pontos de milhar e troca vírgula por ponto para o JS calcular
+            return val.replace(/\./g, '').replace(',', '.');
+        };
         
-        let precoDe = parseFloat(getVal('precoDe'));
-        let precoPor = parseFloat(getVal('precoPor'));
+        const p = (id) => document.getElementById(id).value;
+        const temFrete = document.getElementById('freteGratis').checked;
+        
+        let numDe = parseFloat(getValRaw('precoDe'));
+        let numPor = parseFloat(getValRaw('precoPor'));
         let descFinal = p('desconto');
 
-        // Cálculo automático de desconto
-        if (precoDe > 0 && precoPor > 0 && !descFinal) {
-            let calculo = Math.round(((precoDe - precoPor) / precoDe) * 100);
+        // Cálculo do desconto
+        if (numDe > 0 && numPor > 0 && !descFinal) {
+            let calculo = Math.round(((numDe - numPor) / numDe) * 100);
             descFinal = (calculo > 0) ? `-${calculo}` : `0`;
         }
 
-        // Montagem da String de saída
+        // Formatação dos valores para o texto final
+        const precoDeFormatado = formatarMoeda(numDe);
+        const precoPorFormatado = formatarMoeda(numPor);
+
         let postagem = `✅ ${p('produto')}\n`;
         if(p('comentarioProd')) postagem += `> ${p('comentarioProd')}\n\n`;
         else postagem += `\n`;
 
         if(p('cupom')) postagem += `🏷️ Cupom: *${p('cupom').toUpperCase()}*\n`;
-        if(p('precoDe')) postagem += `💰 De: R$ ${p('precoDe')}\n`;
         
-        // Exibe o preço por (se houver valor)
-        if(p('precoPor')) {
-            postagem += `🔥 Por: R$ ${p('precoPor')} \`${descFinal ? descFinal + '%' : ''}\`\n`;
+        if(precoDeFormatado) postagem += `💰 De: R$ ${precoDeFormatado}\n`;
+        
+        if(precoPorFormatado) {
+            postagem += `🔥 Por: R$ ${precoPorFormatado} \`${descFinal ? descFinal + '%' : ''}\`\n`;
         }
         
         if(p('parcelas')) postagem += `💳 Parcelamento: ${p('parcelas')}\n`;
@@ -131,7 +134,6 @@
         update();
     }
 
-    // CHAMADA INICIAL: Faz o preview aparecer assim que a página carrega
     update();
 </script>
 
