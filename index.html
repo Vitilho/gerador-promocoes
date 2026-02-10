@@ -67,30 +67,41 @@
 <script>
     function formatarMoeda(valor) {
         if (isNaN(valor) || valor === 0) return "";
+        // Formata para o padrão brasileiro: milhar com ponto e decimal com vírgula
         return valor.toLocaleString('pt-BR', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
     }
 
     function update() {
         const getValRaw = (id) => {
-            const val = document.getElementById(id).value;
-            // Remove pontos de milhar e troca vírgula por ponto para o JS calcular
-            return val.replace(/\./g, '').replace(',', '.');
+            let val = document.getElementById(id).value;
+            if (!val) return 0;
+            // Remove tudo que não é número ou vírgula, depois troca vírgula por ponto
+            // Isso permite que o parseFloat entenda o valor para o cálculo
+            let cleanVal = val.replace(/\./g, '').replace(',', '.');
+            return parseFloat(cleanVal) || 0;
         };
         
         const p = (id) => document.getElementById(id).value;
         const temFrete = document.getElementById('freteGratis').checked;
         
-        let numDe = parseFloat(getValRaw('precoDe'));
-        let numPor = parseFloat(getValRaw('precoPor'));
-        let descFinal = p('desconto');
+        let numDe = getValRaw('precoDe');
+        let numPor = getValRaw('precoPor');
+        let descManual = p('desconto');
+        let descCalculado = "";
 
-        // Cálculo do desconto
-        if (numDe > 0 && numPor > 0 && !descFinal) {
-            let calculo = Math.round(((numDe - numPor) / numDe) * 100);
-            descFinal = (calculo > 0) ? `-${calculo}` : `0`;
+        // Cálculo do desconto (regra de negócio para a Central do Vitilho)
+        if (numDe > 0 && numPor > 0) {
+            if (descManual) {
+                descCalculado = descManual;
+            } else {
+                let calculo = Math.round(((numDe - numPor) / numDe) * 100);
+                descCalculado = (calculo > 0) ? `-${calculo}%` : `0%`;
+            }
+        } else if (descManual) {
+            descCalculado = descManual.includes('%') ? descManual : `${descManual}%`;
         }
 
-        // Formatação dos valores para o texto final
+        // Formatação para exibição final
         const precoDeFormatado = formatarMoeda(numDe);
         const precoPorFormatado = formatarMoeda(numPor);
 
@@ -103,7 +114,7 @@
         if(precoDeFormatado) postagem += `💰 De: R$ ${precoDeFormatado}\n`;
         
         if(precoPorFormatado) {
-            postagem += `🔥 Por: R$ ${precoPorFormatado} \`${descFinal ? descFinal + '%' : ''}\`\n`;
+            postagem += `🔥 Por: R$ ${precoPorFormatado} \`${descCalculado}\`\n`;
         }
         
         if(p('parcelas')) postagem += `💳 Parcelamento: ${p('parcelas')}\n`;
