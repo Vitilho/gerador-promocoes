@@ -37,9 +37,6 @@
     <label>Preço Por (R$)</label>
     <input type="text" id="precoPor" placeholder="2.269,55" oninput="update()">
     
-    <label>Desconto (%)</label>
-    <input type="text" id="desconto" placeholder="Ex: -43" oninput="update()">
-    
     <label>Parcelamento</label>
     <input type="text" id="parcelas" placeholder="10x de R$ 226,95" oninput="update()">
 
@@ -81,18 +78,12 @@
         
         let numDe = getValRaw('precoDe');
         let numPor = getValRaw('precoPor');
-        let descManual = p('desconto');
         let descCalculado = "";
 
+        // Cálculo Automático de Desconto
         if (numDe > 0 && numPor > 0) {
-            if (descManual) {
-                descCalculado = descManual.includes('%') ? descManual : `-${descManual.replace('-', '')}%`;
-            } else {
-                let calculo = Math.round(((numDe - numPor) / numDe) * 100);
-                descCalculado = (calculo > 0) ? `-${calculo}%` : `0%`;
-            }
-        } else if (descManual) {
-            descCalculado = descManual.includes('%') ? descManual : `-${descManual.replace('-', '')}%`;
+            let calculo = Math.round(((numDe - numPor) / numDe) * 100);
+            descCalculado = (calculo > 0) ? `-${calculo}%` : `0%`;
         }
 
         const precoDeFormatado = formatarMoeda(numDe);
@@ -103,8 +94,16 @@
         else postagem += `\n`;
 
         if(p('cupom')) postagem += `🏷️ Cupom: *${p('cupom').toUpperCase()}*\n`;
-        if(precoDeFormatado) postagem += `💰 De: R$ ${precoDeFormatado}\n`;
-        if(precoPorFormatado) postagem += `🔥 Por: R$ ${precoPorFormatado} \`${descCalculado}\`\n`;
+        
+        // Preço De com tachado: ~R$ 0,00~
+        if(precoDeFormatado) postagem += `💰 De: ~R$ ${precoDeFormatado}~\n`;
+        
+        // Preço Por com negrito: *R$ 0,00*
+        if(precoPorFormatado) {
+            let tagDesc = descCalculado ? ` \`${descCalculado}\`` : "";
+            postagem += `🔥 Por: *R$ ${precoPorFormatado}*${tagDesc}\n`;
+        }
+        
         if(p('parcelas')) postagem += `💳 Parcelamento: ${p('parcelas')}\n`;
         if(temFrete) postagem += `🚚 Frete Grátis\n`;
         if(p('link')) postagem += `\n🔗 ${p('link')}\n`;
@@ -129,7 +128,6 @@
         document.getElementById('produto').focus();
     }
 
-    // Inicialização
     window.onload = () => {
         update();
         document.getElementById('produto').focus();
