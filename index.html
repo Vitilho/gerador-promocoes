@@ -24,7 +24,7 @@
     <h2>🛠 Dados da Promoção</h2>
     
     <label>Produto</label>
-    <input type="text" id="produto" placeholder="Ex: Galaxy Nvidia Geforce RTX 5060" oninput="update()">
+    <input type="text" id="produto" placeholder="Ex: Galaxy Nvidia Geforce RTX 5060" oninput="update()" autofocus>
     
     <label>Comentário Produto</label>
     <input type="text" id="comentarioProd" placeholder="Ex: A melhor custo beneficio..." oninput="update()">
@@ -143,9 +143,12 @@
         document.querySelectorAll('input').forEach(i => i.value = '');
         document.getElementById('freteGratis').checked = true;
         update();
+            
+        document.getElementById('produto').focus();
     }
 
     update();
+    document.getElementById('produto').focus();
 </script>
 
 </body>
