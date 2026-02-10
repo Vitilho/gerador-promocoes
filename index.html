@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gerador de Postagens - Central do Vitilho</title>
+    <style>
+        body { font-family: sans-serif; background-color: #f4f4f9; padding: 20px; display: flex; gap: 20px; }
+        .container { background: white; padding: 20px; border-radius: 8px; box-shadow: 0 2px 10px rgba(0,0,0,0.1); width: 450px; }
+        .preview-container { flex-grow: 1; background: #eef2f7; padding: 20px; border-radius: 8px; position: sticky; top: 20px; height: fit-content; }
+        h2 { font-size: 1.2rem; margin-top: 0; color: #333; }
+        label { display: block; margin-top: 10px; font-weight: bold; font-size: 0.85rem; }
+        input, textarea { width: 100%; padding: 8px; margin-top: 5px; border: 1px solid #ccc; border-radius: 4px; box-sizing: border-box; }
+        textarea { height: 60px; resize: none; }
+        .output { background: white; padding: 15px; border: 1px solid #ddd; border-radius: 4px; white-space: pre-wrap; margin-bottom: 15px; font-family: 'Segoe UI Emoji', sans-serif; }
+        button { width: 100%; padding: 10px; margin-top: 10px; cursor: pointer; border: none; border-radius: 4px; font-weight: bold; }
+        .btn-copy { background-color: #28a745; color: white; }
+        .btn-clear { background-color: #dc3545; color: white; }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h2>🛠 Dados da Promoção</h2>
+    
+    <label>Produto</label>
+    <input type="text" id="produto" placeholder="Ex: Galaxy Nvidia Geforce RTX 5060" oninput="update()">
+    
+    <label>Comentário Produto</label>
+    <input type="text" id="comentarioProd" placeholder="Ex: A melhor custo beneficio..." oninput="update()">
+    
+    <label>Cupom</label>
+    <input type="text" id="cupom" placeholder="Ex: MELI25" oninput="update()">
+    
+    <label>Preço De (R$)</label>
+    <input type="text" id="precoDe" placeholder="3.999,00" oninput="update()">
+    
+    <label>Preço Por (R$)</label>
+    <input type="text" id="precoPor" placeholder="2.269,55" oninput="update()">
+    
+    <label>Desconto (%)</label>
+    <input type="text" id="desconto" placeholder="-43" oninput="update()">
+    
+    <label>Parcelamento</label>
+    <input type="text" id="parcelas" placeholder="10x de R$ 226,95 SEM JUROS" oninput="update()">
+    
+    <label>Link</label>
+    <input type="text" id="link" placeholder="https://..." oninput="update()">
+    
+    <label>Loja/Vendedor</label>
+    <input type="text" id="loja" placeholder="Ex: Loja Oficial, TNT Info" oninput="update()">
+
+    <button class="btn-clear" onclick="clearFields()">Limpar Tudo</button>
+</div>
+
+<div class="preview-container">
+    <h2>📱 Preview (Pronto para Copiar)</h2>
+    <div id="result" class="output"></div>
+    <button class="btn-copy" onclick="copyToClipboard()">Copiar Postagem</button>
+</div>
+
+<script>
+    function update() {
+        const getVal = (id) => document.getElementById(id).value.replace('.', '').replace(',', '.');
+        const p = (id) => document.getElementById(id).value;
+        
+        // Lógica de Cálculo Automático de Desconto
+        let precoDe = parseFloat(getVal('precoDe'));
+        let precoPor = parseFloat(getVal('precoPor'));
+        let descFinal = p('desconto');
+
+        if (precoDe > 0 && precoPor > 0 && !p('desconto')) {
+            let calculo = Math.round(((precoDe - precoPor) / precoDe) * 100);
+            descFinal = `-${calculo}`;
+        }
+
+        // Montagem do Layout
+        let postagem = `✅ ${p('produto')}\n`;
+        if(p('comentarioProd')) postagem += `> ${p('comentarioProd')}\n\n`;
+        else postagem += `\n`;
+
+        if(p('cupom')) postagem += `🏷️ Cupom: *${p('cupom').toUpperCase()}*\n`;
+        if(p('precoDe')) postagem += `💰 De: R$ ${p('precoDe')}\n`;
+        
+        postagem += `🔥 Por: R$ ${p('precoPor')} \`${descFinal}%\`\n`;
+        
+        if(p('parcelas')) postagem += `💳 Parcelamento: ${p('parcelas')}\n`;
+        
+        postagem += `🚚 Frete Grátis\n\n`;
+        postagem += `🔗 ${p('link')}\n`;
+        
+        if(p('loja')) postagem += `> ${p('loja')}`;
+
+        document.getElementById('result').innerText = postagem;
+    }
+
+    function copyToClipboard() {
+        const text = document.getElementById('result').innerText;
+        navigator.clipboard.writeText(text).then(() => {
+            const btn = document.querySelector('.btn-copy');
+            btn.innerText = "✅ Copiado!";
+            setTimeout(() => { btn.innerText = "Copiar Postagem"; }, 2000);
+        });
+    }
+
+    function clearFields() {
+        document.querySelectorAll('input').forEach(i => i.value = '');
+        update();
+    }
+</script>
+
+</body>
+</html>
