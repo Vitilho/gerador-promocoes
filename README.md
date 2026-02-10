@@ -23,4 +23,4 @@ Agilizar o processo de "copia e cola" de promoções (Amazon, Mercado Livre, Mag
 4. Cole no seu canal ou grupo de promoções.
 
 ---
-Desenvolvido por [Seu Nome/Víctor Nogueira] 🚀
+Desenvolvido por [Víctor Nogueira] 🚀
