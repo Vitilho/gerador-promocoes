@@ -69,6 +69,7 @@
         const getValRaw = (id) => {
             let val = document.getElementById(id).value;
             if (!val) return 0;
+            // Limpa formatação para cálculo
             let cleanVal = val.replace(/\./g, '').replace(',', '.');
             return parseFloat(cleanVal) || 0;
         };
@@ -78,7 +79,7 @@
         
         let numDe = getValRaw('precoDe');
         let numPor = getValRaw('precoPor');
-        let qtdParc = parseInt(p('qtdParcelas'));
+        let qtdParc = parseInt(p('qtdParcelas')); // Pega o número inteiro de parcelas
         let descCalculado = "";
 
         // Cálculo Automático de Desconto
@@ -95,17 +96,20 @@
         else postagem += `\n`;
 
         if(p('cupom')) postagem += `🏷️ Cupom: *${p('cupom').toUpperCase()}*\n`;
-        if(precoDeFormatado) postagem += `💰 De: ~R$ ${precoDeFormatado}~\n`;
+        
+        if(precoDeFormatado) {
+            postagem += `💰 De: ~R$ ${precoDeFormatado}~\n`;
+        }
         
         if(precoPorFormatado) {
             let tagDesc = descCalculado ? ` \`${descCalculado}\`` : "";
             postagem += `🔥 Por: *R$ ${precoPorFormatado}*${tagDesc}\n`;
         }
         
-        // Cálculo Automático de Parcelamento
+        // Cálculo e Formatação do Parcelamento com Negrito (*)
         if(qtdParc > 1 && numPor > 0) {
             let valorParcela = numPor / qtdParc;
-            postagem += `💳 Parcelamento: ${qtdParc}x de R$ ${formatarMoeda(valorParcela)} SEM JUROS\n`;
+            postagem += `💳 *Parcelamento: ${qtdParc}x de R$ ${formatarMoeda(valorParcela)} SEM JUROS*\n`;
         }
         
         if(temFrete) postagem += `🚚 Frete Grátis\n`;
