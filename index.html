@@ -15,6 +15,29 @@
         button { width: 100%; padding: 10px; margin-top: 10px; cursor: pointer; border: none; border-radius: 4px; font-weight: bold; }
         .btn-copy { background-color: #28a745; color: white; }
         .btn-clear { background-color: #dc3545; color: white; }
+
+        /* Estilos dos Botões de Preset */
+        .presets-container { display: flex; flex-wrap: wrap; gap: 5px; margin-top: 5px; margin-bottom: 5px; }
+        .btn-preset { 
+            padding: 4px 8px; 
+            font-size: 0.75rem; 
+            border: 1px solid #ddd; 
+            border-radius: 12px; 
+            cursor: pointer; 
+            background: #f0f0f0; 
+            color: #333;
+            transition: 0.2s;
+            width: auto; /* Sobrescreve o width 100% genérico */
+            margin-top: 0;
+        }
+        .btn-preset:hover { transform: translateY(-1px); box-shadow: 0 2px 4px rgba(0,0,0,0.1); }
+        
+        /* Cores Específicas por Loja */
+        .ml { background-color: #fff159; border-color: #e6d84e; color: #333; } /* Mercado Livre */
+        .shopee { background-color: #ee4d2d; border-color: #d63c1e; color: white; } /* Shopee */
+        .amazon { background-color: #232f3e; border-color: #151e29; color: white; } /* Amazon */
+        
+        .section-title { font-size: 0.75rem; color: #666; margin-top: 8px; width: 100%; font-weight: bold;}
     </style>
 </head>
 <body>
@@ -48,7 +71,23 @@
     <input type="text" id="link" oninput="update()">
     
     <label>Loja/Vendedor</label>
-    <input type="text" id="loja" oninput="update()">
+    <div class="presets-container">
+        <div class="section-title">Mercado Livre</div>
+        <button class="btn-preset ml" onclick="setLoja('Loja Oficial, |')">Oficial</button>
+        <button class="btn-preset ml" onclick="setLoja('Loja MercadoLíder Platinum')">Platinum</button>
+        <button class="btn-preset ml" onclick="setLoja('Loja MercadoLíder Gold')">Gold</button>
+        <button class="btn-preset ml" onclick="setLoja('Loja MercadoLíder')">Líder</button>
+
+        <div class="section-title">Shopee</div>
+        <button class="btn-preset shopee" onclick="setLoja('Loja Oficial, |')">Oficial</button>
+        <button class="btn-preset shopee" onclick="setLoja('Indicação Shopee')">Indicação</button>
+
+        <div class="section-title">Amazon</div>
+        <button class="btn-preset amazon" onclick="setLoja('Vendido e Entregue pela Amazon')">Full Amazon</button>
+        <button class="btn-preset amazon" onclick="setLoja('Vendido por | e Entregue pela Amazon')">Mkt + Entregue</button>
+        <button class="btn-preset amazon" onclick="setLoja('Vendido e Entregue pela |')">Vendido + Entregue</button>
+    </div>
+    <input type="text" id="loja" oninput="update()" placeholder="Selecione acima ou digite...">
 
     <button class="btn-clear" onclick="clearFields()">Limpar Tudo</button>
 </div>
@@ -65,11 +104,30 @@
         return valor.toLocaleString('pt-BR', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
     }
 
+    // Função Inteligente para preencher a loja e posicionar o cursor
+    function setLoja(texto) {
+        const inputLoja = document.getElementById('loja');
+        
+        // Verifica se o texto tem o caractere curinga "|"
+        if (texto.includes('|')) {
+            const partes = texto.split('|');
+            inputLoja.value = partes.join(''); // Remove o pipe para o texto final
+            update();
+            inputLoja.focus();
+            
+            // Define a posição do cursor exatamente onde estava o "|"
+            const posicaoCursor = partes[0].length;
+            inputLoja.setSelectionRange(posicaoCursor, posicaoCursor);
+        } else {
+            inputLoja.value = texto;
+            update();
+        }
+    }
+
     function update() {
         const getValRaw = (id) => {
             let val = document.getElementById(id).value;
             if (!val) return 0;
-            // Limpa formatação para cálculo
             let cleanVal = val.replace(/\./g, '').replace(',', '.');
             return parseFloat(cleanVal) || 0;
         };
@@ -79,10 +137,9 @@
         
         let numDe = getValRaw('precoDe');
         let numPor = getValRaw('precoPor');
-        let qtdParc = parseInt(p('qtdParcelas')); // Pega o número inteiro de parcelas
+        let qtdParc = parseInt(p('qtdParcelas'));
         let descCalculado = "";
 
-        // Cálculo Automático de Desconto
         if (numDe > 0 && numPor > 0) {
             let calculo = Math.round(((numDe - numPor) / numDe) * 100);
             descCalculado = (calculo > 0) ? `-${calculo}%` : `0%`;
@@ -106,10 +163,9 @@
             postagem += `🔥 Por: *R$ ${precoPorFormatado}*${tagDesc}\n`;
         }
         
-        // Cálculo e Formatação do Parcelamento com Negrito (*)
         if(qtdParc > 1 && numPor > 0) {
             let valorParcela = numPor / qtdParc;
-            postagem += `💳 Parcelamento: *${qtdParc}x de R$ ${formatarMoeda(valorParcela)} SEM JUROS*\n`;
+            postagem += `💳 *Parcelamento: ${qtdParc}x de R$ ${formatarMoeda(valorParcela)} SEM JUROS*\n`;
         }
         
         if(temFrete) postagem += `🚚 Frete Grátis\n`;
