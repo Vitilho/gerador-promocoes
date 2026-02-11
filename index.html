@@ -37,8 +37,8 @@
     <label>Preço Por (R$)</label>
     <input type="text" id="precoPor" placeholder="2.269,55" oninput="update()">
     
-    <label>Parcelamento</label>
-    <input type="text" id="parcelas" placeholder="10x de R$ 226,95" oninput="update()">
+    <label>Quantidade de Parcelas (Sem Juros)</label>
+    <input type="number" id="qtdParcelas" placeholder="Ex: 10" oninput="update()">
 
     <label style="display: flex; align-items: center; gap: 8px; cursor: pointer; margin-top: 15px;">
         <input type="checkbox" id="freteGratis" onchange="update()" checked style="width: auto;"> Possui Frete Grátis?
@@ -62,7 +62,6 @@
 <script>
     function formatarMoeda(valor) {
         if (!valor || isNaN(valor)) return "";
-        // Garante o padrão brasileiro: 1.250,55
         return valor.toLocaleString('pt-BR', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
     }
 
@@ -70,7 +69,6 @@
         const getValRaw = (id) => {
             let val = document.getElementById(id).value;
             if (!val) return 0;
-            // Remove pontos de milhar e troca vírgula por ponto para o parseFloat
             let cleanVal = val.replace(/\./g, '').replace(',', '.');
             return parseFloat(cleanVal) || 0;
         };
@@ -80,9 +78,10 @@
         
         let numDe = getValRaw('precoDe');
         let numPor = getValRaw('precoPor');
+        let qtdParc = parseInt(p('qtdParcelas'));
         let descCalculado = "";
 
-        // Cálculo Automático de Desconto para a Central do Vitilho
+        // Cálculo Automático de Desconto
         if (numDe > 0 && numPor > 0) {
             let calculo = Math.round(((numDe - numPor) / numDe) * 100);
             descCalculado = (calculo > 0) ? `-${calculo}%` : `0%`;
@@ -96,18 +95,19 @@
         else postagem += `\n`;
 
         if(p('cupom')) postagem += `🏷️ Cupom: *${p('cupom').toUpperCase()}*\n`;
-        
-        // CORREÇÃO: Aplicação manual dos caracteres nos valores formatados
-        if(precoDeFormatado) {
-            postagem += `💰 De: ~R$ ${precoDeFormatado}~\n`;
-        }
+        if(precoDeFormatado) postagem += `💰 De: ~R$ ${precoDeFormatado}~\n`;
         
         if(precoPorFormatado) {
             let tagDesc = descCalculado ? ` \`${descCalculado}\`` : "";
             postagem += `🔥 Por: *R$ ${precoPorFormatado}*${tagDesc}\n`;
         }
         
-        if(p('parcelas')) postagem += `💳 Parcelamento: ${p('parcelas')}\n`;
+        // Cálculo Automático de Parcelamento
+        if(qtdParc > 1 && numPor > 0) {
+            let valorParcela = numPor / qtdParc;
+            postagem += `💳 Parcelamento: ${qtdParc}x de R$ ${formatarMoeda(valorParcela)} SEM JUROS\n`;
+        }
+        
         if(temFrete) postagem += `🚚 Frete Grátis\n`;
         if(p('link')) postagem += `\n🔗 ${p('link')}\n`;
         if(p('loja')) postagem += `> ${p('loja')}`;
