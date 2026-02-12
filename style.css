@@ -1,165 +1,148 @@
-/* Importando a fonte Inter do Google Fonts */
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&family=JetBrains+Mono:wght@400&display=swap');
 
-/* --- Reset e Corpo --- */
-* {
-    box-sizing: border-box;
-}
+/* --- Reset e Estrutura --- */
+* { box-sizing: border-box; outline: none; }
 
 body {
     font-family: 'Inter', sans-serif;
-    background-color: #f3f4f6; /* Cinza moderno e suave */
-    color: #1f2937; /* Cinza escuro para texto (menos cansativo que preto puro) */
+    background-color: #e0e7ff; /* Fundo azulado suave */
+    background-image: linear-gradient(135deg, #e0e7ff 0%, #f3f4f6 100%);
+    color: #111827;
     padding: 40px;
     display: flex;
     justify-content: center;
     align-items: flex-start;
-    gap: 30px;
+    gap: 40px;
     min-height: 100vh;
-    line-height: 1.5;
 }
 
-/* --- Layout Responsivo --- */
-@media (max-width: 900px) {
-    body {
-        flex-direction: column;
-        align-items: center;
-        padding: 20px;
-    }
-    .container, .preview-container {
-        width: 100% !important;
-        max-width: 100%;
-    }
-    .preview-container {
-        position: static !important; /* Remove o sticky no mobile */
-    }
-}
-
-/* --- Cartões (Containers) --- */
-.container, .preview-container {
+/* --- Containers com efeito de "Vidro" Sólido --- */
+.container {
     background: #ffffff;
-    padding: 30px;
-    border-radius: 12px;
-    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+    padding: 35px;
+    border-radius: 24px; /* Bordas bem arredondadas */
+    box-shadow: 0 20px 40px -5px rgba(0, 0, 0, 0.1), 0 10px 15px -5px rgba(0, 0, 0, 0.04);
     width: 480px;
-    transition: transform 0.2s ease;
+    border: 1px solid rgba(255, 255, 255, 0.8);
 }
 
 .preview-container {
     flex-grow: 1;
-    background: #ffffff;
-    border: 1px solid #e5e7eb;
+    background: #111827; /* Fundo DARK para o preview */
+    padding: 35px;
+    border-radius: 24px;
+    box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
     position: sticky;
     top: 30px;
     height: fit-content;
+    color: #fff; /* Texto branco */
     max-width: 500px;
 }
 
 /* --- Tipografia --- */
 h2 {
-    font-size: 1.25rem;
-    font-weight: 700;
+    font-size: 1.5rem;
+    font-weight: 800;
     margin-top: 0;
-    margin-bottom: 20px;
-    color: #111827;
-    border-bottom: 2px solid #f3f4f6;
-    padding-bottom: 10px;
+    margin-bottom: 25px;
+    letter-spacing: -0.02em;
 }
+
+.container h2 { color: #1f2937; }
+.preview-container h2 { color: #f3f4f6; }
 
 label {
     display: block;
-    margin-top: 15px;
+    margin-top: 18px;
     font-weight: 600;
-    font-size: 0.875rem;
-    color: #374151;
-    margin-bottom: 6px;
+    font-size: 0.85rem;
+    color: #4b5563;
+    margin-bottom: 8px;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
 }
 
-/* --- Inputs --- */
+/* --- Inputs Modernos (Sem borda, Fundo Sólido) --- */
 input[type="text"], 
 input[type="number"] {
     width: 100%;
-    padding: 10px 12px;
-    font-size: 0.95rem;
-    border: 1px solid #d1d5db;
-    border-radius: 8px;
-    background-color: #f9fafb;
-    transition: all 0.2s;
-    font-family: 'Inter', sans-serif;
+    padding: 14px 16px;
+    font-size: 1rem;
+    border: 2px solid transparent;
+    border-radius: 12px;
+    background-color: #f3f4f6;
+    color: #1f2937;
+    font-weight: 500;
+    transition: all 0.2s ease;
 }
 
 input:focus {
-    outline: none;
-    border-color: #2563eb; /* Azul foco */
-    background-color: #fff;
-    box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
+    background-color: #ffffff;
+    border-color: #6366f1; /* Roxo Indigo vibrante */
+    box-shadow: 0 0 0 4px rgba(99, 102, 241, 0.15);
 }
 
-/* --- Checkbox customizado --- */
+/* --- Checkbox Estilizado --- */
 input[type="checkbox"] {
-    width: 18px;
-    height: 18px;
-    accent-color: #2563eb;
+    width: 20px;
+    height: 20px;
+    accent-color: #6366f1;
     cursor: pointer;
+    vertical-align: middle;
 }
 
-/* --- Botões Principais --- */
+/* --- Botões de Ação --- */
 button {
     width: 100%;
-    padding: 12px;
-    margin-top: 20px;
+    padding: 16px;
+    margin-top: 25px;
     cursor: pointer;
     border: none;
-    border-radius: 8px;
-    font-weight: 600;
+    border-radius: 14px;
+    font-weight: 700;
     font-size: 1rem;
-    transition: all 0.2s ease;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 8px;
+    letter-spacing: 0.02em;
+    transition: transform 0.2s, box-shadow 0.2s;
 }
 
 .btn-copy {
-    background: linear-gradient(135deg, #10b981 0%, #059669 100%); /* Verde Gradiente */
+    background: #10b981; /* Verde sólido vibrante */
     color: white;
-    box-shadow: 0 4px 6px rgba(16, 185, 129, 0.2);
+    box-shadow: 0 10px 20px -5px rgba(16, 185, 129, 0.4);
 }
 
 .btn-copy:hover {
+    background: #059669;
     transform: translateY(-2px);
-    box-shadow: 0 6px 8px rgba(16, 185, 129, 0.3);
+    box-shadow: 0 15px 25px -5px rgba(16, 185, 129, 0.5);
 }
 
-.btn-copy:active {
-    transform: translateY(0);
-}
+.btn-copy:active { transform: translateY(0); }
 
 .btn-clear {
-    background-color: transparent;
+    background: transparent;
     color: #ef4444;
-    border: 1px solid #fecaca;
-    margin-top: 15px;
-    font-size: 0.9rem;
+    border: 2px dashed #fecaca;
+    padding: 12px;
 }
 
 .btn-clear:hover {
-    background-color: #fef2f2;
+    background: #fef2f2;
     border-color: #ef4444;
 }
 
-/* --- Área de Preview (Estilo WhatsApp/Telegram) --- */
+/* --- Área de Preview (Estilo Código/Terminal) --- */
 .output {
-    background: #f0f2f5; /* Fundo estilo chat */
-    padding: 20px;
-    border: 1px solid #e5e7eb;
-    border-radius: 8px;
+    background: #1f2937; /* Cinza bem escuro */
+    padding: 25px;
+    border-radius: 16px;
     white-space: pre-wrap;
-    font-family: 'Segoe UI Emoji', 'Inter', sans-serif;
-    font-size: 0.95rem;
-    color: #000;
+    font-family: 'JetBrains Mono', monospace; /* Fonte monoespaçada estilo dev */
+    font-size: 0.9rem;
+    color: #e5e7eb;
     min-height: 250px;
-    line-height: 1.6;
+    line-height: 1.7;
+    border: 1px solid #374151;
 }
 
 /* --- Presets (Botões de Loja) --- */
@@ -167,41 +150,44 @@ button {
     display: flex;
     flex-wrap: wrap;
     gap: 8px;
-    margin-top: 10px;
-    margin-bottom: 10px;
+    margin-bottom: 12px;
 }
 
 .section-title {
-    font-size: 0.75rem;
-    text-transform: uppercase;
-    letter-spacing: 0.05em;
-    color: #6b7280;
-    margin-top: 12px;
-    margin-bottom: 4px;
+    font-size: 0.7rem;
+    font-weight: 800;
+    color: #9ca3af;
     width: 100%;
-    font-weight: 700;
+    margin-top: 15px;
+    margin-bottom: 5px;
+    text-transform: uppercase;
 }
 
 .btn-preset {
-    padding: 6px 12px;
+    padding: 8px 14px;
     font-size: 0.75rem;
-    border: none;
-    border-radius: 20px; /* Formato de pílula */
-    cursor: pointer;
-    font-weight: 600;
-    transition: transform 0.2s, opacity 0.2s;
-    width: auto;
+    border-radius: 8px;
     margin-top: 0;
+    width: auto;
+    font-weight: 700;
+    border: none;
     opacity: 0.9;
 }
 
 .btn-preset:hover {
-    transform: scale(1.05);
+    transform: translateY(-2px);
     opacity: 1;
-    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+    filter: brightness(1.1);
 }
 
-/* Cores vibrantes para as lojas */
-.ml { background-color: #fff159; color: #333; border: 1px solid #f2e205; }
-.shopee { background-color: #ee4d2d; color: white; }
-.amazon { background-color: #232f3e; color: white; }
+/* Cores Neon/Vibrantes para Lojas */
+.ml { background-color: #facc15; color: #000; box-shadow: 0 4px 10px rgba(250, 204, 21, 0.3); }
+.shopee { background-color: #f97316; color: #fff; box-shadow: 0 4px 10px rgba(249, 115, 22, 0.3); }
+.amazon { background-color: #3b82f6; color: #fff; box-shadow: 0 4px 10px rgba(59, 130, 246, 0.3); }
+
+/* --- Mobile --- */
+@media (max-width: 900px) {
+    body { flex-direction: column; align-items: stretch; padding: 20px; }
+    .container, .preview-container { width: 100%; max-width: 100%; }
+    .preview-container { position: static; }
+}
