@@ -1,6 +1,6 @@
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&family=JetBrains+Mono:wght@400&display=swap');
 
-/* --- Reset e Layout de App --- */
+/* --- Reset e Layout Geral --- */
 * { box-sizing: border-box; outline: none; }
 
 body {
@@ -9,12 +9,11 @@ body {
     background-image: linear-gradient(135deg, #e0e7ff 0%, #f3f4f6 100%);
     color: #111827;
     margin: 0;
-    padding: 20px; /* Padding reduzido */
-    height: 100vh; /* Ocupa exatamente a altura da tela */
-    overflow: hidden; /* IMPEDE O SCROLL DA PÁGINA INTEIRA */
+    padding: 20px;
+    height: 100vh; /* Trava a altura na tela inteira */
+    overflow: hidden; /* Remove scroll da página */
     display: flex;
     justify-content: center;
-    align-items: stretch; /* Estica os containers */
     gap: 20px;
 }
 
@@ -24,110 +23,119 @@ body {
     box-shadow: 0 20px 40px -5px rgba(0, 0, 0, 0.1);
     display: flex;
     flex-direction: column;
+    height: 100%; /* Ocupa a altura disponível */
 }
 
 /* Container da Esquerda (Formulário) */
 .container {
     background: #ffffff;
-    padding: 25px;
-    width: 500px;
+    padding: 30px;
+    width: 500px; /* Largura fixa para desktop */
     border: 1px solid rgba(255, 255, 255, 0.8);
-    /* HABILITA SCROLL APENAS AQUI SE NECESSÁRIO */
-    overflow-y: auto; 
+    overflow-y: auto; /* Scroll APENAS aqui dentro se precisar */
 }
-
-/* Esconde a barra de rolagem feia, mas mantém a função */
-.container::-webkit-scrollbar { width: 6px; }
-.container::-webkit-scrollbar-thumb { background-color: #cbd5e1; border-radius: 4px; }
 
 /* Container da Direita (Preview) */
 .preview-container {
-    flex-grow: 1;
-    max-width: 550px;
+    flex-grow: 1; /* Ocupa o resto da tela */
+    max-width: 600px;
     background: #111827;
-    padding: 25px;
+    padding: 30px;
     color: #fff;
-    overflow: hidden; /* Preview não precisa de scroll externo */
+    overflow: hidden;
 }
 
-/* --- Layout em Grid/Linhas (Otimização de Espaço) --- */
+/* Esconde barra de rolagem nativa feia */
+.container::-webkit-scrollbar { width: 6px; }
+.container::-webkit-scrollbar-thumb { background-color: #cbd5e1; border-radius: 4px; }
+
+/* --- SISTEMA DE GRID (O que faz as colunas funcionarem) --- */
 .input-row {
     display: flex;
-    gap: 15px;
-    align-items: flex-end; /* Alinha inputs com checkboxes */
+    gap: 15px; /* Espaço entre as colunas */
+    width: 100%;
+    align-items: flex-end; /* Alinha o checkbox com o input */
 }
 
 .input-group {
-    flex: 1; /* Ocupa espaço igual */
-}
-
-.checkbox-group {
+    flex: 1; /* Faz os campos dividirem o espaço igualmente */
     display: flex;
-    align-items: center;
-    gap: 10px;
-    padding-bottom: 12px; /* Alinha visualmente com os inputs */
-    background: #f9fafb;
-    border-radius: 12px;
-    padding: 10px 15px;
-    border: 1px solid #e5e7eb;
-    margin-top: 38px; /* Compensa a altura do label dos outros inputs */
-    height: 52px; /* Altura forçada igual ao input */
+    flex-direction: column;
 }
 
-/* --- Tipografia Compacta --- */
+/* Estilo especial para o grupo do Checkbox */
+.checkbox-group {
+    flex-direction: row; /* Checkbox ao lado do texto */
+    align-items: center;
+    background: #f3f4f6;
+    border-radius: 10px;
+    padding: 0 15px;
+    height: 45px; /* Altura igual a do input vizinho */
+    margin-bottom: 2px; /* Ajuste fino de alinhamento */
+    border: 2px solid transparent;
+    cursor: pointer;
+}
+
+.checkbox-group:hover {
+    background: #e5e7eb;
+}
+
+/* --- Tipografia --- */
 h2 {
     font-size: 1.2rem;
     font-weight: 800;
     margin-top: 0;
-    margin-bottom: 15px;
+    margin-bottom: 20px;
     letter-spacing: -0.02em;
-    flex-shrink: 0; /* Impede que o título suma */
 }
 
 .container h2 { color: #1f2937; border-bottom: 2px solid #f3f4f6; padding-bottom: 10px; }
 .preview-container h2 { color: #f3f4f6; border-bottom: 2px solid #374151; padding-bottom: 10px; }
 
 label {
-    display: block;
-    margin-top: 12px; /* Reduzi margem */
-    font-weight: 600;
-    font-size: 0.75rem; /* Fonte menor */
+    margin-top: 15px;
+    font-weight: 700;
+    font-size: 0.75rem;
     color: #6b7280;
     margin-bottom: 5px;
     text-transform: uppercase;
 }
 
-/* --- Inputs Modernos --- */
+/* --- Inputs --- */
 input[type="text"], 
 input[type="number"] {
     width: 100%;
-    padding: 12px; /* Reduzi padding */
-    font-size: 0.9rem;
+    padding: 12px;
+    font-size: 0.95rem;
     border: 2px solid transparent;
     border-radius: 10px;
     background-color: #f3f4f6;
     color: #1f2937;
-    font-weight: 500;
+    font-weight: 600;
     transition: all 0.2s;
+    font-family: 'Inter', sans-serif;
 }
 
 input:focus {
     background-color: #fff;
     border-color: #6366f1;
-    box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.15);
+    box-shadow: 0 0 0 4px rgba(99, 102, 241, 0.15);
 }
 
+/* Checkbox */
 input[type="checkbox"] {
     width: 18px;
     height: 18px;
     accent-color: #6366f1;
-    margin: 0;
+    margin-right: 8px;
+    cursor: pointer;
 }
 
 .checkbox-group span {
     font-size: 0.85rem;
     font-weight: 600;
     color: #374151;
+    cursor: pointer;
 }
 
 /* --- Botões --- */
@@ -139,7 +147,7 @@ button {
     border: none;
     border-radius: 10px;
     font-weight: 700;
-    font-size: 0.95rem;
+    font-size: 1rem;
     transition: transform 0.2s;
 }
 
@@ -156,41 +164,38 @@ button {
     color: #ef4444;
     border: 2px dashed #fecaca;
     padding: 10px;
-    margin-top: 10px;
 }
 .btn-clear:hover { background: #fef2f2; border-color: #ef4444; }
 
 /* --- Preview Area --- */
 .output {
     background: #1f2937;
-    padding: 0; /* Remove padding extra */
     white-space: pre-wrap;
     font-family: 'JetBrains Mono', monospace;
-    font-size: 0.85rem;
+    font-size: 0.9rem;
     color: #e5e7eb;
     line-height: 1.6;
-    flex-grow: 1; /* Ocupa todo o espaço restante */
-    overflow-y: auto; /* Scroll se o texto for longo */
+    height: 100%;
+    overflow-y: auto;
 }
 
-/* --- Presets Compactos --- */
+/* --- Presets --- */
 .presets-container {
     display: flex;
     flex-wrap: wrap;
     gap: 6px;
-    margin-bottom: 10px;
+    margin-bottom: 8px;
 }
 
 .btn-preset {
-    padding: 6px 10px;
-    font-size: 0.7rem;
+    padding: 6px 12px;
+    font-size: 0.75rem;
     border-radius: 6px;
-    margin-top: 0;
+    margin-top: 5px; /* Espaço do label */
     width: auto;
     font-weight: 700;
-    opacity: 0.9;
 }
-.btn-preset:hover { transform: translateY(-2px); opacity: 1; }
+.btn-preset:hover { transform: translateY(-2px); filter: brightness(1.1); }
 
 .ml { background-color: #facc15; color: #000; }
 .shopee { background-color: #f97316; color: #fff; }
@@ -199,6 +204,8 @@ button {
 /* --- Mobile --- */
 @media (max-width: 900px) {
     body { flex-direction: column; height: auto; overflow: auto; }
-    .container, .preview-container { width: 100%; max-width: 100%; height: auto; overflow: visible; }
-    .checkbox-group { margin-top: 0; }
+    .container, .preview-container { width: 100%; height: auto; overflow: visible; }
+    .input-row { flex-direction: column; gap: 0; }
+    .input-group { width: 100%; }
+    .checkbox-group { margin-top: 15px; }
 }
