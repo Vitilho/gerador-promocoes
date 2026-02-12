@@ -1,34 +1,207 @@
-/* ARQUIVO: style.css */
-body { font-family: sans-serif; background-color: #f4f4f9; padding: 20px; display: flex; gap: 20px; }
-.container { background: white; padding: 20px; border-radius: 8px; box-shadow: 0 2px 10px rgba(0,0,0,0.1); width: 450px; }
-.preview-container { flex-grow: 1; background: #eef2f7; padding: 20px; border-radius: 8px; position: sticky; top: 20px; height: fit-content; }
-h2 { font-size: 1.2rem; margin-top: 0; color: #333; }
-label { display: block; margin-top: 10px; font-weight: bold; font-size: 0.85rem; }
-input { width: 100%; padding: 8px; margin-top: 5px; border: 1px solid #ccc; border-radius: 4px; box-sizing: border-box; }
-.output { background: white; padding: 15px; border: 1px solid #ddd; border-radius: 4px; white-space: pre-wrap; margin-bottom: 15px; font-family: 'Segoe UI Emoji', sans-serif; min-height: 200px; }
-button { width: 100%; padding: 10px; margin-top: 10px; cursor: pointer; border: none; border-radius: 4px; font-weight: bold; }
-.btn-copy { background-color: #28a745; color: white; }
-.btn-clear { background-color: #dc3545; color: white; }
+/* Importando a fonte Inter do Google Fonts */
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
 
-/* Estilos dos Botões de Preset */
-.presets-container { display: flex; flex-wrap: wrap; gap: 5px; margin-top: 5px; margin-bottom: 5px; }
-.btn-preset { 
-    padding: 4px 8px; 
-    font-size: 0.75rem; 
-    border: 1px solid #ddd; 
-    border-radius: 12px; 
-    cursor: pointer; 
-    background: #f0f0f0; 
-    color: #333;
-    transition: 0.2s;
+/* --- Reset e Corpo --- */
+* {
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Inter', sans-serif;
+    background-color: #f3f4f6; /* Cinza moderno e suave */
+    color: #1f2937; /* Cinza escuro para texto (menos cansativo que preto puro) */
+    padding: 40px;
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+    gap: 30px;
+    min-height: 100vh;
+    line-height: 1.5;
+}
+
+/* --- Layout Responsivo --- */
+@media (max-width: 900px) {
+    body {
+        flex-direction: column;
+        align-items: center;
+        padding: 20px;
+    }
+    .container, .preview-container {
+        width: 100% !important;
+        max-width: 100%;
+    }
+    .preview-container {
+        position: static !important; /* Remove o sticky no mobile */
+    }
+}
+
+/* --- Cartões (Containers) --- */
+.container, .preview-container {
+    background: #ffffff;
+    padding: 30px;
+    border-radius: 12px;
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+    width: 480px;
+    transition: transform 0.2s ease;
+}
+
+.preview-container {
+    flex-grow: 1;
+    background: #ffffff;
+    border: 1px solid #e5e7eb;
+    position: sticky;
+    top: 30px;
+    height: fit-content;
+    max-width: 500px;
+}
+
+/* --- Tipografia --- */
+h2 {
+    font-size: 1.25rem;
+    font-weight: 700;
+    margin-top: 0;
+    margin-bottom: 20px;
+    color: #111827;
+    border-bottom: 2px solid #f3f4f6;
+    padding-bottom: 10px;
+}
+
+label {
+    display: block;
+    margin-top: 15px;
+    font-weight: 600;
+    font-size: 0.875rem;
+    color: #374151;
+    margin-bottom: 6px;
+}
+
+/* --- Inputs --- */
+input[type="text"], 
+input[type="number"] {
+    width: 100%;
+    padding: 10px 12px;
+    font-size: 0.95rem;
+    border: 1px solid #d1d5db;
+    border-radius: 8px;
+    background-color: #f9fafb;
+    transition: all 0.2s;
+    font-family: 'Inter', sans-serif;
+}
+
+input:focus {
+    outline: none;
+    border-color: #2563eb; /* Azul foco */
+    background-color: #fff;
+    box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
+}
+
+/* --- Checkbox customizado --- */
+input[type="checkbox"] {
+    width: 18px;
+    height: 18px;
+    accent-color: #2563eb;
+    cursor: pointer;
+}
+
+/* --- Botões Principais --- */
+button {
+    width: 100%;
+    padding: 12px;
+    margin-top: 20px;
+    cursor: pointer;
+    border: none;
+    border-radius: 8px;
+    font-weight: 600;
+    font-size: 1rem;
+    transition: all 0.2s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+}
+
+.btn-copy {
+    background: linear-gradient(135deg, #10b981 0%, #059669 100%); /* Verde Gradiente */
+    color: white;
+    box-shadow: 0 4px 6px rgba(16, 185, 129, 0.2);
+}
+
+.btn-copy:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 8px rgba(16, 185, 129, 0.3);
+}
+
+.btn-copy:active {
+    transform: translateY(0);
+}
+
+.btn-clear {
+    background-color: transparent;
+    color: #ef4444;
+    border: 1px solid #fecaca;
+    margin-top: 15px;
+    font-size: 0.9rem;
+}
+
+.btn-clear:hover {
+    background-color: #fef2f2;
+    border-color: #ef4444;
+}
+
+/* --- Área de Preview (Estilo WhatsApp/Telegram) --- */
+.output {
+    background: #f0f2f5; /* Fundo estilo chat */
+    padding: 20px;
+    border: 1px solid #e5e7eb;
+    border-radius: 8px;
+    white-space: pre-wrap;
+    font-family: 'Segoe UI Emoji', 'Inter', sans-serif;
+    font-size: 0.95rem;
+    color: #000;
+    min-height: 250px;
+    line-height: 1.6;
+}
+
+/* --- Presets (Botões de Loja) --- */
+.presets-container {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin-top: 10px;
+    margin-bottom: 10px;
+}
+
+.section-title {
+    font-size: 0.75rem;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    color: #6b7280;
+    margin-top: 12px;
+    margin-bottom: 4px;
+    width: 100%;
+    font-weight: 700;
+}
+
+.btn-preset {
+    padding: 6px 12px;
+    font-size: 0.75rem;
+    border: none;
+    border-radius: 20px; /* Formato de pílula */
+    cursor: pointer;
+    font-weight: 600;
+    transition: transform 0.2s, opacity 0.2s;
     width: auto;
     margin-top: 0;
+    opacity: 0.9;
 }
-.btn-preset:hover { transform: translateY(-1px); box-shadow: 0 2px 4px rgba(0,0,0,0.1); }
 
-/* Cores Específicas por Loja */
-.ml { background-color: #fff159; border-color: #e6d84e; color: #333; }
-.shopee { background-color: #ee4d2d; border-color: #d63c1e; color: white; }
-.amazon { background-color: #232f3e; border-color: #151e29; color: white; }
+.btn-preset:hover {
+    transform: scale(1.05);
+    opacity: 1;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+}
 
-.section-title { font-size: 0.75rem; color: #666; margin-top: 8px; width: 100%; font-weight: bold;}
+/* Cores vibrantes para as lojas */
+.ml { background-color: #fff159; color: #333; border: 1px solid #f2e205; }
+.shopee { background-color: #ee4d2d; color: white; }
+.amazon { background-color: #232f3e; color: white; }
