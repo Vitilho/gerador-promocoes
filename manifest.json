@@ -1,0 +1,15 @@
+{
+  "manifest_version": 3,
+  "name": "Gerador - Central do Vitilho",
+  "version": "1.0",
+  "description": "Gerador rápido de postagens de ofertas para o Vitilho.",
+  "action": {
+    "default_popup": "index.html",
+    "default_icon": {
+      "16": "icon.png",
+      "48": "icon.png",
+      "128": "icon.png"
+    }
+  },
+  "permissions": ["activeTab", "scripting"]
+}
