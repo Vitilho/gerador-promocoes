@@ -9,38 +9,37 @@ body {
     background-image: linear-gradient(135deg, #e0e7ff 0%, #f3f4f6 100%);
     color: #111827;
     margin: 0;
-    padding: 20px;
-    height: 100vh; /* Trava a altura na tela inteira */
-    overflow: hidden; /* Remove scroll da página */
+    padding: 15px;
+    width: 780px;  /* Trava quase na largura máxima do Chrome */
+    height: 580px; /* Trava quase na altura máxima do Chrome */
+    overflow: hidden; 
     display: flex;
-    justify-content: center;
-    gap: 20px;
+    gap: 15px; /* Reduzi um pouco o espaço entre os dois blocos */
 }
 
 /* --- Containers --- */
 .container, .preview-container {
-    border-radius: 20px;
-    box-shadow: 0 20px 40px -5px rgba(0, 0, 0, 0.1);
+    border-radius: 16px; /* Bordas um pouquinho mais suaves para tela menor */
+    box-shadow: 0 10px 20px -5px rgba(0, 0, 0, 0.1);
     display: flex;
     flex-direction: column;
-    height: 100%; /* Ocupa a altura disponível */
+    height: 100%; 
 }
 
 /* Container da Esquerda (Formulário) */
 .container {
     background: #ffffff;
-    padding: 30px;
-    width: 500px; /* Largura fixa para desktop */
+    padding: 20px; /* Menos padding para ganhar espaço */
+    width: 380px;  /* Ajustado para caber certinho do lado do preview */
     border: 1px solid rgba(255, 255, 255, 0.8);
-    overflow-y: auto; /* Scroll APENAS aqui dentro se precisar */
+    overflow-y: auto; 
 }
 
 /* Container da Direita (Preview) */
 .preview-container {
-    flex-grow: 1; /* Ocupa o resto da tela */
-    max-width: 600px;
+    flex-grow: 1; /* Pega o resto do espaço (cerca de 370px) */
     background: #111827;
-    padding: 30px;
+    padding: 20px;
     color: #fff;
     overflow: hidden;
 }
