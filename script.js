@@ -1,27 +1,54 @@
-/* ARQUIVO: script.js */
-
 function formatarMoeda(valor) {
     if (!valor || isNaN(valor)) return "";
     return valor.toLocaleString('pt-BR', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
 }
 
-// Função Inteligente para preencher a loja e posicionar o cursor
 function setLoja(texto) {
     const inputLoja = document.getElementById('loja');
-    
-    // Verifica se o texto tem o caractere curinga "|"
     if (texto.includes('|')) {
         const partes = texto.split('|');
-        inputLoja.value = partes.join(''); // Remove o pipe para o texto final
+        inputLoja.value = partes.join('');
         update();
         inputLoja.focus();
-        
-        // Define a posição do cursor exatamente onde estava o "|"
         const posicaoCursor = partes[0].length;
         inputLoja.setSelectionRange(posicaoCursor, posicaoCursor);
     } else {
         inputLoja.value = texto;
         update();
+    }
+}
+
+// NOVA FUNÇÃO: Salva tudo no cache
+function salvarEstado() {
+    const estado = {
+        produto: document.getElementById('produto').value,
+        comentarioProd: document.getElementById('comentarioProd').value,
+        cupom: document.getElementById('cupom').value,
+        precoDe: document.getElementById('precoDe').value,
+        precoPor: document.getElementById('precoPor').value,
+        qtdParcelas: document.getElementById('qtdParcelas').value,
+        freteGratis: document.getElementById('freteGratis').checked,
+        link: document.getElementById('link').value,
+        loja: document.getElementById('loja').value
+    };
+    localStorage.setItem('memoriaVitilho', JSON.stringify(estado));
+}
+
+// NOVA FUNÇÃO: Carrega tudo do cache
+function carregarEstado() {
+    const memoria = localStorage.getItem('memoriaVitilho');
+    if (memoria) {
+        const estado = JSON.parse(memoria);
+        document.getElementById('produto').value = estado.produto || '';
+        document.getElementById('comentarioProd').value = estado.comentarioProd || '';
+        document.getElementById('cupom').value = estado.cupom || '';
+        document.getElementById('precoDe').value = estado.precoDe || '';
+        document.getElementById('precoPor').value = estado.precoPor || '';
+        document.getElementById('qtdParcelas').value = estado.qtdParcelas || '';
+        // Se for nulo, marca como true por padrão
+        document.getElementById('freteGratis').checked = estado.freteGratis !== false; 
+        document.getElementById('link').value = estado.link || '';
+        document.getElementById('loja').value = estado.loja || '';
     }
 }
 
@@ -55,9 +82,7 @@ function update() {
 
     if(p('cupom')) postagem += `🏷️ Cupom: *${p('cupom').toUpperCase()}*\n`;
     
-    if(precoDeFormatado) {
-        postagem += `💰 De: ~R$ ${precoDeFormatado}~\n`;
-    }
+    if(precoDeFormatado) postagem += `💰 De: ~R$ ${precoDeFormatado}~\n`;
     
     if(precoPorFormatado) {
         let tagDesc = descCalculado ? ` \`${descCalculado}\`` : "";
@@ -74,6 +99,9 @@ function update() {
     if(p('loja')) postagem += `> ${p('loja')}`;
 
     document.getElementById('result').innerText = postagem;
+    
+    // CHAMA O SALVAMENTO TODA VEZ QUE ALGO É DIGITADO
+    salvarEstado();
 }
 
 function copyToClipboard() {
@@ -86,13 +114,18 @@ function copyToClipboard() {
 }
 
 function clearFields() {
-    document.querySelectorAll('input').forEach(i => i.value = '');
+    document.querySelectorAll('input[type="text"], input[type="number"]').forEach(i => i.value = '');
     document.getElementById('freteGratis').checked = true;
+    
+    // LIMPA A MEMÓRIA TAMBÉM
+    localStorage.removeItem('memoriaVitilho');
+    
     update();
     document.getElementById('produto').focus();
 }
 
 window.onload = () => {
+    carregarEstado(); // Puxa os dados antes de montar a tela
     update();
     document.getElementById('produto').focus();
 };
