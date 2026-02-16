@@ -1,17 +1,15 @@
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&family=JetBrains+Mono:wght@400&display=swap');
-
-/* --- Reset e Layout Geral --- */
+    /* --- Reset e Layout Geral --- */
 * { box-sizing: border-box; outline: none; }
 
 body {
-    font-family: 'Inter', sans-serif;
+    /* Usa a fonte nativa mais rápida do sistema (Windows, Mac ou Linux) */
+    font-family: system-ui, -apple-system, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
     background-color: #e0e7ff;
     background-image: linear-gradient(135deg, #e0e7ff 0%, #f3f4f6 100%);
     color: #111827;
     margin: 0;
     padding: 20px;
     
-    /* A MÁGICA PARA A EXTENSÃO FUNCIONAR SEM QUEBRAR A WEB: */
     min-width: 780px; 
     min-height: 580px; 
     height: 100vh;
@@ -141,7 +139,9 @@ button {
 
 /* --- Preview Area --- */
 .output {
-    background: #1f2937; white-space: pre-wrap; font-family: 'JetBrains Mono', monospace;
+    background: #1f2937; white-space: pre-wrap; 
+    /* Fonte de código nativa e super rápida */
+    font-family: Consolas, "Courier New", monospace;
     font-size: 0.9rem; color: #e5e7eb; line-height: 1.6; height: 100%; overflow-y: auto;
 }
 
