@@ -1,89 +1,85 @@
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&family=JetBrains+Mono:wght@400&display=swap');
 
-/* --- Reset Geral --- */
+/* --- Reset e Layout Geral --- */
 * { box-sizing: border-box; outline: none; }
 
-/* O body agora só define a fonte e o fundo */
 body {
     font-family: 'Inter', sans-serif;
     background-color: #e0e7ff;
     background-image: linear-gradient(135deg, #e0e7ff 0%, #f3f4f6 100%);
     color: #111827;
     margin: 0;
-    padding: 0;
-}
-
-/* --- NOVO: O Embrulho que define o tamanho do Popup --- */
-.main-wrapper {
-    width: 780px;  /* Largura fixa para a extensão */
-    height: 600px; /* Altura fixa para a extensão */
-    padding: 15px;
-    display: flex; /* Organiza os dois blocos lado a lado */
-    gap: 15px;
-    overflow: hidden; /* Evita barras de rolagem externas */
+    padding: 20px;
+    
+    /* A MÁGICA PARA A EXTENSÃO FUNCIONAR SEM QUEBRAR A WEB: */
+    min-width: 780px; 
+    min-height: 580px; 
+    height: 100vh;
+    
+    overflow: hidden; 
+    display: flex;
+    justify-content: center;
+    gap: 20px;
 }
 
 /* --- Containers --- */
 .container, .preview-container {
-    border-radius: 16px;
-    box-shadow: 0 10px 20px -5px rgba(0, 0, 0, 0.1);
+    border-radius: 20px;
+    box-shadow: 0 20px 40px -5px rgba(0, 0, 0, 0.1);
     display: flex;
     flex-direction: column;
-    height: 100%; /* Ocupa toda a altura do embrulho */
+    height: 100%; 
 }
 
 /* Container da Esquerda (Formulário) */
 .container {
     background: #ffffff;
-    padding: 20px;
-    width: 380px;
+    padding: 30px;
+    width: 500px; 
     border: 1px solid rgba(255, 255, 255, 0.8);
     overflow-y: auto; 
 }
 
 /* Container da Direita (Preview) */
 .preview-container {
-    flex-grow: 1;
+    flex-grow: 1; 
+    max-width: 600px;
     background: #111827;
-    padding: 20px;
+    padding: 30px;
     color: #fff;
     overflow: hidden;
 }
 
-/* Esconde barra de rolagem nativa feia */
 .container::-webkit-scrollbar { width: 6px; }
 .container::-webkit-scrollbar-thumb { background-color: #cbd5e1; border-radius: 4px; }
 
-/* --- SISTEMA DE GRID (Colunas lado a lado) --- */
+/* --- SISTEMA DE GRID (O que faz as colunas funcionarem) --- */
 .input-row {
     display: flex;
-    gap: 15px; /* Espaço entre as colunas */
+    gap: 15px; 
     width: 100%;
-    align-items: flex-end; /* Alinha o checkbox com o input */
+    align-items: flex-end; 
 }
 
 .input-group {
-    flex: 1; /* Faz os campos dividirem o espaço igualmente */
+    flex: 1; 
     display: flex;
     flex-direction: column;
 }
 
-/* Estilo especial para o grupo do Checkbox */
 .checkbox-group {
-    flex-direction: row; /* Checkbox ao lado do texto */
+    flex-direction: row; 
     align-items: center;
     background: #f3f4f6;
     border-radius: 10px;
     padding: 0 15px;
-    height: 45px; /* Altura igual a do input vizinho */
-    margin-bottom: 2px; /* Ajuste fino de alinhamento */
+    height: 45px; 
+    margin-bottom: 2px; 
     border: 2px solid transparent;
     cursor: pointer;
 }
 
-.checkbox-group:hover {
-    background: #e5e7eb;
-}
+.checkbox-group:hover { background: #e5e7eb; }
 
 /* --- Tipografia --- */
 h2 {
@@ -127,90 +123,33 @@ input:focus {
     box-shadow: 0 0 0 4px rgba(99, 102, 241, 0.15);
 }
 
-/* Checkbox */
-input[type="checkbox"] {
-    width: 18px;
-    height: 18px;
-    accent-color: #6366f1;
-    margin-right: 8px;
-    cursor: pointer;
-}
-
-.checkbox-group span {
-    font-size: 0.85rem;
-    font-weight: 600;
-    color: #374151;
-    cursor: pointer;
-}
+input[type="checkbox"] { width: 18px; height: 18px; accent-color: #6366f1; margin-right: 8px; cursor: pointer; }
+.checkbox-group span { font-size: 0.85rem; font-weight: 600; color: #374151; cursor: pointer; }
 
 /* --- Botões --- */
 button {
-    width: 100%;
-    padding: 14px;
-    margin-top: 20px;
-    cursor: pointer;
-    border: none;
-    border-radius: 10px;
-    font-weight: 700;
-    font-size: 1rem;
-    transition: transform 0.2s;
+    width: 100%; padding: 14px; margin-top: 20px; cursor: pointer;
+    border: none; border-radius: 10px; font-weight: 700; font-size: 1rem; transition: transform 0.2s;
 }
 
-.btn-copy {
-    background: #10b981;
-    color: white;
-    box-shadow: 0 8px 15px -3px rgba(16, 185, 129, 0.4);
-}
+.btn-copy { background: #10b981; color: white; box-shadow: 0 8px 15px -3px rgba(16, 185, 129, 0.4); }
 .btn-copy:hover { transform: translateY(-2px); background: #059669; }
 .btn-copy:active { transform: translateY(0); }
 
-.btn-clear {
-    background: transparent;
-    color: #ef4444;
-    border: 2px dashed #fecaca;
-    padding: 10px;
-}
+.btn-clear { background: transparent; color: #ef4444; border: 2px dashed #fecaca; padding: 10px; }
 .btn-clear:hover { background: #fef2f2; border-color: #ef4444; }
 
 /* --- Preview Area --- */
 .output {
-    background: #1f2937;
-    white-space: pre-wrap;
-    font-family: 'JetBrains Mono', monospace;
-    font-size: 0.9rem;
-    color: #e5e7eb;
-    line-height: 1.6;
-    height: 100%;
-    overflow-y: auto;
+    background: #1f2937; white-space: pre-wrap; font-family: 'JetBrains Mono', monospace;
+    font-size: 0.9rem; color: #e5e7eb; line-height: 1.6; height: 100%; overflow-y: auto;
 }
 
 /* --- Presets --- */
-.presets-container {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 6px;
-    margin-bottom: 8px;
-}
-
-.btn-preset {
-    padding: 6px 12px;
-    font-size: 0.75rem;
-    border-radius: 6px;
-    margin-top: 5px; 
-    width: auto;
-    font-weight: 700;
-}
+.presets-container { display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 8px; }
+.btn-preset { padding: 6px 12px; font-size: 0.75rem; border-radius: 6px; margin-top: 5px; width: auto; font-weight: 700; }
 .btn-preset:hover { transform: translateY(-2px); filter: brightness(1.1); }
 
 .ml { background-color: #facc15; color: #000; }
 .shopee { background-color: #f97316; color: #fff; }
 .amazon { background-color: #3b82f6; color: #fff; }
-
-/* --- Mobile (Caso precise abrir em aba cheia) --- */
-@media (max-width: 900px) {
-    .main-wrapper { flex-direction: column; width: 100%; height: auto; overflow: visible; }
-    .container, .preview-container { width: 100%; height: auto; overflow: visible; }
-    .input-row { flex-direction: column; gap: 0; }
-    .input-group { width: 100%; }
-    .checkbox-group { margin-top: 15px; }
-}
