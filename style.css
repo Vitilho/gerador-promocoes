@@ -50,7 +50,167 @@ body {
     overflow: hidden;
 }
 
-/* ... O RESTANTE DO CÓDIGO CSS CONTINUA IGUAL ABAIXO DAQUI ... */
 /* Esconde barra de rolagem nativa feia */
 .container::-webkit-scrollbar { width: 6px; }
-/* etc... */
+.container::-webkit-scrollbar-thumb { background-color: #cbd5e1; border-radius: 4px; }
+
+/* --- SISTEMA DE GRID (Colunas lado a lado) --- */
+.input-row {
+    display: flex;
+    gap: 15px; /* Espaço entre as colunas */
+    width: 100%;
+    align-items: flex-end; /* Alinha o checkbox com o input */
+}
+
+.input-group {
+    flex: 1; /* Faz os campos dividirem o espaço igualmente */
+    display: flex;
+    flex-direction: column;
+}
+
+/* Estilo especial para o grupo do Checkbox */
+.checkbox-group {
+    flex-direction: row; /* Checkbox ao lado do texto */
+    align-items: center;
+    background: #f3f4f6;
+    border-radius: 10px;
+    padding: 0 15px;
+    height: 45px; /* Altura igual a do input vizinho */
+    margin-bottom: 2px; /* Ajuste fino de alinhamento */
+    border: 2px solid transparent;
+    cursor: pointer;
+}
+
+.checkbox-group:hover {
+    background: #e5e7eb;
+}
+
+/* --- Tipografia --- */
+h2 {
+    font-size: 1.2rem;
+    font-weight: 800;
+    margin-top: 0;
+    margin-bottom: 20px;
+    letter-spacing: -0.02em;
+}
+
+.container h2 { color: #1f2937; border-bottom: 2px solid #f3f4f6; padding-bottom: 10px; }
+.preview-container h2 { color: #f3f4f6; border-bottom: 2px solid #374151; padding-bottom: 10px; }
+
+label {
+    margin-top: 15px;
+    font-weight: 700;
+    font-size: 0.75rem;
+    color: #6b7280;
+    margin-bottom: 5px;
+    text-transform: uppercase;
+}
+
+/* --- Inputs --- */
+input[type="text"], 
+input[type="number"] {
+    width: 100%;
+    padding: 12px;
+    font-size: 0.95rem;
+    border: 2px solid transparent;
+    border-radius: 10px;
+    background-color: #f3f4f6;
+    color: #1f2937;
+    font-weight: 600;
+    transition: all 0.2s;
+    font-family: 'Inter', sans-serif;
+}
+
+input:focus {
+    background-color: #fff;
+    border-color: #6366f1;
+    box-shadow: 0 0 0 4px rgba(99, 102, 241, 0.15);
+}
+
+/* Checkbox */
+input[type="checkbox"] {
+    width: 18px;
+    height: 18px;
+    accent-color: #6366f1;
+    margin-right: 8px;
+    cursor: pointer;
+}
+
+.checkbox-group span {
+    font-size: 0.85rem;
+    font-weight: 600;
+    color: #374151;
+    cursor: pointer;
+}
+
+/* --- Botões --- */
+button {
+    width: 100%;
+    padding: 14px;
+    margin-top: 20px;
+    cursor: pointer;
+    border: none;
+    border-radius: 10px;
+    font-weight: 700;
+    font-size: 1rem;
+    transition: transform 0.2s;
+}
+
+.btn-copy {
+    background: #10b981;
+    color: white;
+    box-shadow: 0 8px 15px -3px rgba(16, 185, 129, 0.4);
+}
+.btn-copy:hover { transform: translateY(-2px); background: #059669; }
+.btn-copy:active { transform: translateY(0); }
+
+.btn-clear {
+    background: transparent;
+    color: #ef4444;
+    border: 2px dashed #fecaca;
+    padding: 10px;
+}
+.btn-clear:hover { background: #fef2f2; border-color: #ef4444; }
+
+/* --- Preview Area --- */
+.output {
+    background: #1f2937;
+    white-space: pre-wrap;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.9rem;
+    color: #e5e7eb;
+    line-height: 1.6;
+    height: 100%;
+    overflow-y: auto;
+}
+
+/* --- Presets --- */
+.presets-container {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+    margin-bottom: 8px;
+}
+
+.btn-preset {
+    padding: 6px 12px;
+    font-size: 0.75rem;
+    border-radius: 6px;
+    margin-top: 5px; 
+    width: auto;
+    font-weight: 700;
+}
+.btn-preset:hover { transform: translateY(-2px); filter: brightness(1.1); }
+
+.ml { background-color: #facc15; color: #000; }
+.shopee { background-color: #f97316; color: #fff; }
+.amazon { background-color: #3b82f6; color: #fff; }
+
+/* --- Mobile (Caso precise abrir em aba cheia) --- */
+@media (max-width: 900px) {
+    .main-wrapper { flex-direction: column; width: 100%; height: auto; overflow: visible; }
+    .container, .preview-container { width: 100%; height: auto; overflow: visible; }
+    .input-row { flex-direction: column; gap: 0; }
+    .input-group { width: 100%; }
+    .checkbox-group { margin-top: 15px; }
+}
