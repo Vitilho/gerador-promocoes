@@ -8,11 +8,17 @@ input[type="file"] { margin-top: 10px; font-size: 0.9rem; }
 /* === LAYOUT DO STORY PARA EXPORTAÇÃO (ESCONDIDO DA TELA) === */
 .story-export-container {
     position: fixed;
-    top: -9999px; /* Mantém fora da tela */
+    top: -9999px; /* Isso garante que o molde fique invisível na sua tela */
     left: -9999px;
     width: 1080px;
     height: 1920px;
-    background: linear-gradient(180deg, #5b6264 0%, #3e4a4c 40%, #1e2526 100%);
+    
+    /* APLICANDO O SEU FUNDO AQUI */
+    background-image: url('BackGround.jpg');
+    background-size: cover;
+    background-position: center;
+    background-color: #1e2526; /* Cor de fallback */
+    
     display: flex;
     flex-direction: column;
     align-items: center;
