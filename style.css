@@ -14,7 +14,7 @@ input[type="file"] { margin-top: 10px; font-size: 0.9rem; }
     height: 1920px;
     
     /* APLICANDO O SEU FUNDO AQUI */
-    background-image: url('BackGround.jpg');
+    background-image: url('BackGround.jpeg');
     background-size: cover;
     background-position: center;
     background-color: #1e2526; /* Cor de fallback */
