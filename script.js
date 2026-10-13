@@ -1,131 +1,105 @@
-function formatarMoeda(valor) {
-    if (!valor || isNaN(valor)) return "";
-    return valor.toLocaleString('pt-BR', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
-}
+// --- NOVAS FUNÇÕES PARA IMAGEM ---
 
-function setLoja(texto) {
-    const inputLoja = document.getElementById('loja');
-    if (texto.includes('|')) {
-        const partes = texto.split('|');
-        inputLoja.value = partes.join('');
-        update();
-        inputLoja.focus();
-        const posicaoCursor = partes[0].length;
-        inputLoja.setSelectionRange(posicaoCursor, posicaoCursor);
-    } else {
-        inputLoja.value = texto;
-        update();
+let imagemBase64 = ""; // Guarda a imagem carregada
+
+function carregarImagemLocal(event) {
+    const file = event.target.files[0];
+    if (file) {
+        const reader = new FileReader();
+        reader.onload = function(e) {
+            imagemBase64 = e.target.result;
+            // Mostra um mini preview no painel esquerdo
+            const previewImg = document.getElementById('previewImgLocal');
+            previewImg.src = imagemBase64;
+            previewImg.style.display = "block";
+            
+            // Joga no template do Story
+            document.getElementById('st-img').src = imagemBase64;
+        };
+        reader.readAsDataURL(file);
     }
 }
 
-// NOVA FUNÇÃO: Salva tudo no cache
-function salvarEstado() {
-    const estado = {
-        produto: document.getElementById('produto').value,
-        comentarioProd: document.getElementById('comentarioProd').value,
-        cupom: document.getElementById('cupom').value,
-        precoDe: document.getElementById('precoDe').value,
-        precoPor: document.getElementById('precoPor').value,
-        qtdParcelas: document.getElementById('qtdParcelas').value,
-        freteGratis: document.getElementById('freteGratis').checked,
-        link: document.getElementById('link').value,
-        loja: document.getElementById('loja').value
-    };
-    localStorage.setItem('memoriaVitilho', JSON.stringify(estado));
-}
-
-// NOVA FUNÇÃO: Carrega tudo do cache
-function carregarEstado() {
-    const memoria = localStorage.getItem('memoriaVitilho');
-    if (memoria) {
-        const estado = JSON.parse(memoria);
-        document.getElementById('produto').value = estado.produto || '';
-        document.getElementById('comentarioProd').value = estado.comentarioProd || '';
-        document.getElementById('cupom').value = estado.cupom || '';
-        document.getElementById('precoDe').value = estado.precoDe || '';
-        document.getElementById('precoPor').value = estado.precoPor || '';
-        document.getElementById('qtdParcelas').value = estado.qtdParcelas || '';
-        // Se for nulo, marca como true por padrão
-        document.getElementById('freteGratis').checked = estado.freteGratis !== false; 
-        document.getElementById('link').value = estado.link || '';
-        document.getElementById('loja').value = estado.loja || '';
+function gerarImagemStory() {
+    const btn = document.getElementById('btnImg');
+    
+    // Validação básica
+    if(!document.getElementById('produto').value) {
+        alert("Preencha pelo menos o nome do produto!");
+        return;
     }
-}
+    if(!imagemBase64) {
+        alert("Faça o upload da imagem do produto primeiro!");
+        return;
+    }
 
-function update() {
-    const getValRaw = (id) => {
-        let val = document.getElementById(id).value;
-        if (!val) return 0;
-        let cleanVal = val.replace(/\./g, '').replace(',', '.');
-        return parseFloat(cleanVal) || 0;
-    };
+    btn.innerText = "⏳ Gerando...";
+    btn.style.pointerEvents = "none";
+
+    // 1. Preencher os dados no Molde do Story
+    document.getElementById('st-title').innerText = document.getElementById('produto').value;
+    document.getElementById('st-loja').innerText = document.getElementById('loja').value || "Loja Parceira";
     
-    const p = (id) => document.getElementById(id).value;
-    const temFrete = document.getElementById('freteGratis').checked;
-    
+    // Cálculos de preço para a imagem
+    const getValRaw = (id) => parseFloat(document.getElementById(id).value.replace(/\./g, '').replace(',', '.')) || 0;
     let numDe = getValRaw('precoDe');
     let numPor = getValRaw('precoPor');
-    let qtdParc = parseInt(p('qtdParcelas'));
-    let descCalculado = "";
+    let cupomText = document.getElementById('cupom').value;
 
+    // Preço De
+    if(numDe > 0) {
+        document.getElementById('st-de-container').style.display = "block";
+        document.getElementById('st-de').innerText = "R$ " + formatarMoeda(numDe);
+    } else {
+        document.getElementById('st-de-container').style.display = "none";
+    }
+
+    // Preço Por
+    if(numPor > 0) {
+        document.getElementById('st-por').innerText = "R$ " + formatarMoeda(numPor);
+    }
+
+    // Desconto %
     if (numDe > 0 && numPor > 0) {
         let calculo = Math.round(((numDe - numPor) / numDe) * 100);
-        descCalculado = (calculo > 0) ? `-${calculo}%` : `0%`;
+        document.getElementById('st-desc').innerText = `-${calculo}%`;
+        document.getElementById('st-desc').style.display = "block";
+    } else {
+        document.getElementById('st-desc').style.display = "none";
     }
 
-    const precoDeFormatado = formatarMoeda(numDe);
-    const precoPorFormatado = formatarMoeda(numPor);
-
-    let postagem = `✅ ${p('produto')}\n`;
-    if(p('comentarioProd')) postagem += `> ${p('comentarioProd')}\n\n`;
-    else postagem += `\n`;
-
-    if(p('cupom')) postagem += `🏷️ Cupom: *${p('cupom').toUpperCase()}*\n`;
-    
-    if(precoDeFormatado) postagem += `💰 De: ~R$ ${precoDeFormatado}~\n`;
-    
-    if(precoPorFormatado) {
-        let tagDesc = descCalculado ? ` \`${descCalculado}\`` : "";
-        postagem += `🔥 Por: *R$ ${precoPorFormatado}*${tagDesc}\n`;
+    // Cupom
+    if(cupomText) {
+        document.getElementById('st-cupom-container').style.display = "block";
+        document.getElementById('st-cupom').innerText = cupomText.toUpperCase();
+    } else {
+        document.getElementById('st-cupom-container').style.display = "none";
     }
-    
-    if(qtdParc > 1 && numPor > 0) {
-        let valorParcela = numPor / qtdParc;
-        postagem += `💳 Parcelamento: *${qtdParc}x de R$ ${formatarMoeda(valorParcela)} SEM JUROS*\n`;
-    }
-    
-    if(temFrete) postagem += `🚚 Frete Grátis\n`;
-    if(p('link')) postagem += `\n🔗 ${p('link')}\n`;
-    if(p('loja')) postagem += `> ${p('loja')}`;
 
-    document.getElementById('result').innerText = postagem;
+    // 2. Usar o html2canvas para tirar o print da div invisível
+    const storyElement = document.getElementById('story-export');
     
-    // CHAMA O SALVAMENTO TODA VEZ QUE ALGO É DIGITADO
-    salvarEstado();
-}
+    html2canvas(storyElement, {
+        scale: 1, // 1 para manter o 1080x1920 nativo
+        useCORS: true,
+        backgroundColor: null
+    }).then(canvas => {
+        // Criar link para baixar a imagem
+        const link = document.createElement('a');
+        link.download = `Story_${document.getElementById('produto').value.substring(0, 15).replace(/\s/g, '_')}.png`;
+        link.href = canvas.toDataURL("image/png");
+        link.click();
 
-function copyToClipboard() {
-    const text = document.getElementById('result').innerText;
-    navigator.clipboard.writeText(text).then(() => {
-        const btn = document.querySelector('.btn-copy');
-        btn.innerText = "✅ Copiado!";
-        setTimeout(() => { btn.innerText = "Copiar Postagem"; }, 2000);
+        // Resetar o botão
+        btn.innerText = "✅ Imagem Baixada!";
+        setTimeout(() => { 
+            btn.innerText = "🖼️ Gerar Imagem"; 
+            btn.style.pointerEvents = "auto";
+        }, 3000);
+    }).catch(err => {
+        console.error("Erro ao gerar imagem:", err);
+        alert("Ocorreu um erro ao gerar a imagem.");
+        btn.innerText = "🖼️ Gerar Imagem"; 
+        btn.style.pointerEvents = "auto";
     });
 }
-
-function clearFields() {
-    document.querySelectorAll('input[type="text"], input[type="number"]').forEach(i => i.value = '');
-    document.getElementById('freteGratis').checked = true;
-    
-    // LIMPA A MEMÓRIA TAMBÉM
-    localStorage.removeItem('memoriaVitilho');
-    
-    update();
-    document.getElementById('produto').focus();
-}
-
-window.onload = () => {
-    carregarEstado(); // Puxa os dados antes de montar a tela
-    update();
-    document.getElementById('produto').focus();
-};
