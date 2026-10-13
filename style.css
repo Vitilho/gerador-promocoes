@@ -1,24 +1,170 @@
-/* Botão de Imagem */
+/* --- Reset e Layout Geral --- */
+* { box-sizing: border-box; outline: none; }
+
+body {
+    font-family: system-ui, -apple-system, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    background-color: #e0e7ff;
+    background-image: linear-gradient(135deg, #e0e7ff 0%, #f3f4f6 100%);
+    color: #111827;
+    margin: 0;
+    padding: 20px;
+    min-width: 780px; 
+    min-height: 580px; 
+    height: 100vh;
+    overflow: hidden; 
+    display: flex;
+    justify-content: center;
+    gap: 20px;
+}
+
+/* --- Containers --- */
+.container, .preview-container {
+    border-radius: 20px;
+    box-shadow: 0 20px 40px -5px rgba(0, 0, 0, 0.1);
+    display: flex;
+    flex-direction: column;
+    height: 100%; 
+}
+
+.container {
+    background: #ffffff;
+    padding: 30px;
+    width: 500px; 
+    border: 1px solid rgba(255, 255, 255, 0.8);
+    overflow-y: auto; 
+}
+
+.preview-container {
+    flex-grow: 1; 
+    max-width: 600px;
+    background: #111827;
+    padding: 30px;
+    color: #fff;
+    overflow: hidden;
+}
+
+.container::-webkit-scrollbar { width: 6px; }
+.container::-webkit-scrollbar-thumb { background-color: #cbd5e1; border-radius: 4px; }
+
+/* --- SISTEMA DE GRID --- */
+.input-row {
+    display: flex;
+    gap: 15px; 
+    width: 100%;
+    align-items: flex-end; 
+}
+
+.input-group {
+    flex: 1; 
+    display: flex;
+    flex-direction: column;
+}
+
+.checkbox-group {
+    flex-direction: row; 
+    align-items: center;
+    background: #f3f4f6;
+    border-radius: 10px;
+    padding: 0 15px;
+    height: 45px; 
+    margin-bottom: 2px; 
+    border: 2px solid transparent;
+    cursor: pointer;
+}
+
+.checkbox-group:hover { background: #e5e7eb; }
+
+/* --- Tipografia --- */
+h2 {
+    font-size: 1.2rem;
+    font-weight: 800;
+    margin-top: 0;
+    margin-bottom: 20px;
+    letter-spacing: -0.02em;
+}
+
+.container h2 { color: #1f2937; border-bottom: 2px solid #f3f4f6; padding-bottom: 10px; }
+.preview-container h2 { color: #f3f4f6; border-bottom: 2px solid #374151; padding-bottom: 10px; }
+
+label {
+    margin-top: 15px;
+    font-weight: 700;
+    font-size: 0.75rem;
+    color: #6b7280;
+    margin-bottom: 5px;
+    text-transform: uppercase;
+}
+
+/* --- Inputs --- */
+input[type="text"], 
+input[type="number"] {
+    width: 100%;
+    padding: 12px;
+    font-size: 0.95rem;
+    border: 2px solid transparent;
+    border-radius: 10px;
+    background-color: #f3f4f6;
+    color: #1f2937;
+    font-weight: 600;
+    transition: all 0.2s;
+    font-family: 'Inter', sans-serif;
+}
+
+input:focus {
+    background-color: #fff;
+    border-color: #6366f1;
+    box-shadow: 0 0 0 4px rgba(99, 102, 241, 0.15);
+}
+
+input[type="checkbox"] { width: 18px; height: 18px; accent-color: #6366f1; margin-right: 8px; cursor: pointer; }
+.checkbox-group span { font-size: 0.85rem; font-weight: 600; color: #374151; cursor: pointer; }
+
+/* --- Botões --- */
+button {
+    width: 100%; padding: 14px; margin-top: 20px; cursor: pointer;
+    border: none; border-radius: 10px; font-weight: 700; font-size: 1rem; transition: transform 0.2s;
+}
+
+.btn-copy { background: #10b981; color: white; box-shadow: 0 8px 15px -3px rgba(16, 185, 129, 0.4); }
+.btn-copy:hover { transform: translateY(-2px); background: #059669; }
+.btn-copy:active { transform: translateY(0); }
+
+.btn-clear { background: transparent; color: #ef4444; border: 2px dashed #fecaca; padding: 10px; }
+.btn-clear:hover { background: #fef2f2; border-color: #ef4444; }
+
+/* --- Preview Area --- */
+.output {
+    background: #1f2937; white-space: pre-wrap; 
+    font-family: Consolas, "Courier New", monospace;
+    font-size: 0.9rem; color: #e5e7eb; line-height: 1.6; height: 100%; overflow-y: auto;
+}
+
+/* --- Presets --- */
+.presets-container { display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 8px; }
+.btn-preset { padding: 6px 12px; font-size: 0.75rem; border-radius: 6px; margin-top: 5px; width: auto; font-weight: 700; }
+.btn-preset:hover { transform: translateY(-2px); filter: brightness(1.1); }
+
+.ml { background-color: #facc15; color: #000; }
+.shopee { background-color: #f97316; color: #fff; }
+.amazon { background-color: #3b82f6; color: #fff; }
+
+/* === NOVOS ESTILOS PARA O GERADOR DE IMAGEM === */
 .btn-image { background: #6366f1; color: white; box-shadow: 0 8px 15px -3px rgba(99, 102, 241, 0.4); }
 .btn-image:hover { transform: translateY(-2px); background: #4f46e5; }
 
-/* Input File */
 input[type="file"] { margin-top: 10px; font-size: 0.9rem; }
 
 /* === LAYOUT DO STORY PARA EXPORTAÇÃO (ESCONDIDO DA TELA) === */
 .story-export-container {
     position: fixed;
-    top: -9999px; /* Isso garante que o molde fique invisível na sua tela */
+    top: -9999px;
     left: -9999px;
     width: 1080px;
     height: 1920px;
-    
-    /* APLICANDO O SEU FUNDO AQUI */
     background-image: url('BackGround.jpeg');
     background-size: cover;
     background-position: center;
-    background-color: #1e2526; /* Cor de fallback */
-    
+    background-color: #1e2526; 
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -108,7 +254,7 @@ input[type="file"] { margin-top: 10px; font-size: 0.9rem; }
 }
 
 #st-por {
-    color: #059669; /* Verde */
+    color: #059669; 
     font-size: 130px;
     font-weight: 900;
     letter-spacing: -5px;
