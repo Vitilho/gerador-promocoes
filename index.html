@@ -5,6 +5,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Gerador de Postagens - Central do Vitilho</title>
     <link rel="stylesheet" href="style.css">
+    <!-- Biblioteca para gerar a imagem -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
 </head>
 <body>
 
@@ -14,6 +16,11 @@
     <label>Produto</label>
     <input type="text" id="produto" placeholder="Ex: RTX 5060" oninput="update()" autofocus>
     
+    <!-- NOVO: Input de Imagem do Produto -->
+    <label>Imagem do Produto</label>
+    <input type="file" id="imagemProduto" accept="image/*" onchange="carregarImagemLocal(event)">
+    <img id="previewImgLocal" src="" style="display:none; max-height: 80px; margin-top: 10px; border-radius: 8px;">
+
     <div class="input-row">
         <div class="input-group">
             <label>Cupom</label>
@@ -63,12 +70,44 @@
 </div>
 
 <div class="preview-container">
-    <h2>📱 Preview</h2>
+    <h2>📱 Preview Texto</h2>
     <div id="result" class="output"></div>
-    <button class="btn-copy" onclick="copyToClipboard()">Copiar Postagem</button>
+    <div style="display: flex; gap: 10px;">
+        <button class="btn-copy" onclick="copyToClipboard()">Copiar Texto</button>
+        <!-- NOVO: Botão de gerar Story -->
+        <button class="btn-image" onclick="gerarImagemStory()" id="btnImg">🖼️ Gerar Imagem</button>
+    </div>
+</div>
+
+<!-- NOVO: Molde Oculto do Story (1080x1920) -->
+<div id="story-export" class="story-export-container">
+    <div class="story-title-box">
+        <h1 id="st-title">Monitor Gamer Phillips de 23.8" Full Hd Ips com 200Hz</h1>
+    </div>
+    <div class="story-loja-text">vendido no <span id="st-loja">Mercado Livre</span></div>
+    
+    <div class="story-img-box">
+        <img id="st-img" src="" alt="Produto">
+    </div>
+
+    <div class="story-badges">
+        <div class="badge-red">IMPERDÍVEL</div>
+        <div class="badge-yellow" id="st-desc">-54%</div>
+    </div>
+
+    <div class="story-preco-de" id="st-de-container">
+        de <s id="st-de">R$ 1.269,45</s>
+    </div>
+
+    <div class="story-preco-por">
+        <span id="st-por">R$ 586</span>
+    </div>
+
+    <div class="story-cupom" id="st-cupom-container">
+        CUPOM: <span id="st-cupom">PROMODEHOJE</span>
+    </div>
 </div>
 
 <script src="script.js"></script>
-
 </body>
 </html>
