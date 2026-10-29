@@ -32,7 +32,7 @@ function update() {
         blocoTopo.push(`✅ ${produto}`);
     }
     if (comentario) {
-        blocoTopo.push(`💬 _${comentario}_`);
+        blocoTopo.push(`> ${comentario}_`);
     }
     if (blocoTopo.length > 0) {
         blocos.push(blocoTopo.join('\n'));
