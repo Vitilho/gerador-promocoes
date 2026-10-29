@@ -1,98 +1,112 @@
-// --- NOVAS FUNÇÕES PARA IMAGEM ---
-
-let imagemBase64 = ""; // Guarda a imagem carregada
-
-function carregarImagemLocal(event) {
-    const file = event.target.files[0];
-    if (file) {
-        const reader = new FileReader();
-        reader.onload = function(e) {
-            imagemBase64 = e.target.result;
-            // Mostra um mini preview no painel esquerdo
-            const previewImg = document.getElementById('previewImgLocal');
-            previewImg.src = imagemBase64;
-            previewImg.style.display = "block";
-            
-            // Joga no template do Story
-            document.getElementById('st-img').src = imagemBase64;
-        };
-        reader.readAsDataURL(file);
-    }
+function formatarMoeda(valor) {
+    return valor.toLocaleString('pt-BR', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
 }
 
-function gerarImagemStory() {
-    const btn = document.getElementById('btnImg');
-    
-    if(!document.getElementById('produto').value) {
-        alert("Preencha pelo menos o nome do produto!");
-        return;
-    }
-    if(!imagemBase64) {
-        alert("Faça o upload da IMAGEM DO PRODUTO (e não do fundo) no botão 'Escolher arquivo'!");
-        return;
-    }
+function getValRaw(id) {
+    const el = document.getElementById(id);
+    if (!el || !el.value) return 0;
+    return parseFloat(el.value.replace(/\./g, '').replace(',', '.')) || 0;
+}
 
-    btn.innerText = "⏳ Gerando...";
-    btn.style.pointerEvents = "none";
+function setLoja(nomeLoja) {
+    document.getElementById('loja').value = nomeLoja;
+    update();
+}
 
-    // Preencher os dados no Molde do Story
-    document.getElementById('st-title').innerText = document.getElementById('produto').value;
-    document.getElementById('st-loja').innerText = document.getElementById('loja').value || "Loja Parceira";
-    
-    const getValRaw = (id) => parseFloat(document.getElementById(id).value.replace(/\./g, '').replace(',', '.')) || 0;
-    let numDe = getValRaw('precoDe');
-    let numPor = getValRaw('precoPor');
-    let cupomText = document.getElementById('cupom').value;
+function update() {
+    const produto = document.getElementById('produto').value.trim();
+    const cupom = document.getElementById('cupom').value.trim();
+    const comentario = document.getElementById('comentarioProd').value.trim();
+    const numDe = getValRaw('precoDe');
+    const numPor = getValRaw('precoPor');
+    const qtdParcelas = parseInt(document.getElementById('qtdParcelas').value) || 0;
+    const freteGratis = document.getElementById('freteGratis').checked;
+    const link = document.getElementById('link').value.trim();
+    const loja = document.getElementById('loja').value.trim();
 
-    if(numDe > 0) {
-        document.getElementById('st-de-container').style.display = "block";
-        document.getElementById('st-de').innerText = "R$ " + formatarMoeda(numDe);
-    } else {
-        document.getElementById('st-de-container').style.display = "none";
+    let linhas = [];
+
+    if ( comentario ) {
+        linhas.push(`💬 *${comentario}*`);
+        linhas.push('');
     }
 
-    if(numPor > 0) {
-        document.getElementById('st-por').innerText = "R$ " + formatarMoeda(numPor);
+    if (produto) {
+        const lojaTexto = loja ? ` _(${loja})_` : '';
+        linhas.push(`📦 *${produto}*${lojaTexto}`);
+        linhas.push('');
     }
 
-    if (numDe > 0 && numPor > 0) {
-        let calculo = Math.round(((numDe - numPor) / numDe) * 100);
-        document.getElementById('st-desc').innerText = `-${calculo}%`;
-        document.getElementById('st-desc').style.display = "block";
-    } else {
-        document.getElementById('st-desc').style.display = "none";
+    if (numDe > 0 && numDe > numPor) {
+        let descontoStr = '';
+        if (numPor > 0) {
+            const desc = Math.round(((numDe - numPor) / numDe) * 100);
+            descontoStr = ` (${desc}% OFF)`;
+        }
+        linhas.push(`❌ ~De R$ ${formatarMoeda(numDe)}~${descontoStr}`);
     }
 
-    if(cupomText) {
-        document.getElementById('st-cupom-container').style.display = "block";
-        document.getElementById('st-cupom').innerText = cupomText.toUpperCase();
-    } else {
-        document.getElementById('st-cupom-container').style.display = "none";
+    if (numPor > 0) {
+        linhas.push(`🔥 *Por R$ ${formatarMoeda(numPor)}*`);
+        if (qtdParcelas > 1) {
+            const valorParcela = numPor / qtdParcelas;
+            linhas.push(`💳 _ou em até ${qtdParcelas}x de R$ ${formatarMoeda(valorParcela)} sem juros_`);
+        }
     }
 
-    const storyElement = document.getElementById('story-export');
-    
-    // Gerar a imagem
-    html2canvas(storyElement, {
-        scale: 1, 
-        useCORS: true,
-        allowTaint: true, // Permite carregar a imagem de fundo local
-        backgroundColor: null
-    }).then(canvas => {
-        const link = document.createElement('a');
-        link.download = `Story_${document.getElementById('produto').value.substring(0, 15).replace(/\s/g, '_')}.png`;
-        link.href = canvas.toDataURL("image/png");
-        link.click();
+    if (cupom) {
+        linhas.push('');
+        linhas.push(`🎟️ Cupom: *${cupom.toUpperCase()}*`);
+    }
 
-        btn.innerText = "✅ Imagem Baixada!";
-        setTimeout(() => { 
-            btn.innerText = "🖼️ Gerar Imagem"; 
-            btn.style.pointerEvents = "auto";
-        }, 3000);
-    }).catch(err => {
-        console.error("Erro:", err);
-        alert("Erro! Se você abriu o index.html com 2 cliques, o navegador bloqueou o fundo por segurança. Use a extensão 'Live Server' do VS Code.");
-        btn.innerText = "🖼️ Gerar Imagem"; 
-        btn.style.pointerEvents = "auto";
+    if (freteGratis) {
+        linhas.push(`🚚 *Frete Grátis*`);
+    }
+
+    if (link) {
+        linhas.push('');
+        linhas.push(`🛒 *Compre aqui:* ${link}`);
+    }
+
+    document.getElementById('result').innerText = linhas.join('\n');
+}
+
+function clearFields() {
+    document.getElementById('produto').value = '';
+    document.getElementById('cupom').value = '';
+    document.getElementById('comentarioProd').value = '';
+    document.getElementById('precoDe').value = '';
+    document.getElementById('precoPor').value = '';
+    document.getElementById('qtdParcelas').value = '';
+    document.getElementById('freteGratis').checked = true;
+    document.getElementById('link').value = '';
+    document.getElementById('loja').value = '';
+    update();
+    document.getElementById('produto').focus();
+}
+
+function copyToClipboard() {
+    const texto = document.getElementById('result').innerText;
+    if (!texto) return;
+
+    navigator.clipboard.writeText(texto).then(() => {
+        const btn = document.getElementById('btnCopy');
+        const originalText = btn.innerText;
+        btn.innerText = '✅ Copiado!';
+        setTimeout(() => {
+            btn.innerText = originalText;
+        }, 2000);
     });
 }
+
+// Permite clicar em qualquer lugar da caixinha cinza para marcar/desmarcar o Frete Grátis
+document.querySelector('.checkbox-group').addEventListener('click', function(e) {
+    if (e.target.tagName !== 'INPUT') {
+        const cb = document.getElementById('freteGratis');
+        cb.checked = !cb.checked;
+        update();
+    }
+});
+
+// Inicializa o preview vazio ao abrir a página
+update();
