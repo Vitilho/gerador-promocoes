@@ -24,51 +24,62 @@ function update() {
     const link = document.getElementById('link').value.trim();
     const loja = document.getElementById('loja').value.trim();
 
-    let linhas = [];
+    let blocos = [];
 
-    if ( comentario ) {
-        linhas.push(`💬 *${comentario}*`);
-        linhas.push('');
-    }
-
+    // 1. Bloco do Produto (e comentário, se preenchido)
+    let blocoTopo = [];
     if (produto) {
-        const lojaTexto = loja ? ` _(${loja})_` : '';
-        linhas.push(`📦 *${produto}*${lojaTexto}`);
-        linhas.push('');
+        blocoTopo.push(`✅ ${produto}`);
+    }
+    if (comentario) {
+        blocoTopo.push(`💬 _${comentario}_`);
+    }
+    if (blocoTopo.length > 0) {
+        blocos.push(blocoTopo.join('\n'));
     }
 
-    if (numDe > 0 && numDe > numPor) {
-        let descontoStr = '';
-        if (numPor > 0) {
-            const desc = Math.round(((numDe - numPor) / numDe) * 100);
-            descontoStr = ` (${desc}% OFF)`;
-        }
-        linhas.push(`❌ ~De R$ ${formatarMoeda(numDe)}~${descontoStr}`);
+    // 2. Bloco de Valores, Cupom e Frete
+    let blocoMeio = [];
+    if (cupom) {
+        blocoMeio.push(`🏷️ Cupom: *${cupom.toUpperCase()}*`);
     }
-
+    if (numDe > 0) {
+        blocoMeio.push(`💰 De: R$ ${formatarMoeda(numDe)}`);
+    }
     if (numPor > 0) {
-        linhas.push(`🔥 *Por R$ ${formatarMoeda(numPor)}*`);
+        let tagDesconto = '';
+        if (numDe > numPor) {
+            const desc = Math.round(((numDe - numPor) / numDe) * 100);
+            tagDesconto = ` \`-${desc}%\``;
+        }
+        blocoMeio.push(`🔥 Por: *R$ ${formatarMoeda(numPor)}*${tagDesconto}`);
+
         if (qtdParcelas > 1) {
             const valorParcela = numPor / qtdParcelas;
-            linhas.push(`💳 _ou em até ${qtdParcelas}x de R$ ${formatarMoeda(valorParcela)} sem juros_`);
+            blocoMeio.push(`💳 Até ${qtdParcelas}x de R$ ${formatarMoeda(valorParcela)} sem juros`);
         }
     }
-
-    if (cupom) {
-        linhas.push('');
-        linhas.push(`🎟️ Cupom: *${cupom.toUpperCase()}*`);
-    }
-
     if (freteGratis) {
-        linhas.push(`🚚 *Frete Grátis*`);
+        blocoMeio.push(`🚚 Frete Grátis`);
+    }
+    if (blocoMeio.length > 0) {
+        blocos.push(blocoMeio.join('\n'));
     }
 
+    // 3. Bloco de Link e Loja
+    let blocoRodape = [];
     if (link) {
-        linhas.push('');
-        linhas.push(`🛒 *Compre aqui:* ${link}`);
+        blocoRodape.push(`🔗 ${link}`);
+    }
+    if (loja) {
+        blocoRodape.push(`> ${loja}`);
+    }
+    if (blocoRodape.length > 0) {
+        blocos.push(blocoRodape.join('\n'));
     }
 
-    document.getElementById('result').innerText = linhas.join('\n');
+    // Junta os blocos separando com uma linha em branco exata
+    document.getElementById('result').innerText = blocos.join('\n\n');
 }
 
 function clearFields() {
@@ -108,5 +119,5 @@ document.querySelector('.checkbox-group').addEventListener('click', function(e) 
     }
 });
 
-// Inicializa o preview vazio ao abrir a página
+// Inicializa o preview ao abrir a página
 update();
