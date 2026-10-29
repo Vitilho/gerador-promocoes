@@ -134,9 +134,16 @@ button {
 
 /* --- Preview Area --- */
 .output {
-    background: #1f2937; white-space: pre-wrap; 
+    background: #1f2937;
+    padding: 20px;
+    border-radius: 12px;
+    white-space: pre-wrap; 
     font-family: Consolas, "Courier New", monospace;
-    font-size: 0.9rem; color: #e5e7eb; line-height: 1.6; height: 100%; overflow-y: auto;
+    font-size: 0.9rem;
+    color: #e5e7eb;
+    line-height: 1.6;
+    height: 100%;
+    overflow-y: auto;
 }
 
 /* --- Presets --- */
@@ -147,125 +154,3 @@ button {
 .ml { background-color: #facc15; color: #000; }
 .shopee { background-color: #f97316; color: #fff; }
 .amazon { background-color: #3b82f6; color: #fff; }
-
-/* === NOVOS ESTILOS PARA O GERADOR DE IMAGEM === */
-.btn-image { background: #6366f1; color: white; box-shadow: 0 8px 15px -3px rgba(99, 102, 241, 0.4); }
-.btn-image:hover { transform: translateY(-2px); background: #4f46e5; }
-
-input[type="file"] { margin-top: 10px; font-size: 0.9rem; }
-
-/* === LAYOUT DO STORY PARA EXPORTAÇÃO (ESCONDIDO DA TELA) === */
-.story-export-container {
-    position: fixed;
-    top: -9999px;
-    left: -9999px;
-    width: 1080px;
-    height: 1920px;
-    background-image: url('BackGround.jpeg');
-    background-size: cover;
-    background-position: center;
-    background-color: #1e2526; 
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    padding-top: 250px;
-    font-family: 'Inter', sans-serif;
-    z-index: -100;
-}
-
-.story-title-box {
-    background: #000;
-    width: 950px;
-    border-radius: 30px;
-    padding: 40px;
-    text-align: center;
-    box-shadow: 0 10px 30px rgba(0,0,0,0.5);
-}
-
-#st-title {
-    color: #fff;
-    font-size: 65px;
-    margin: 0;
-    line-height: 1.2;
-    font-weight: 800;
-}
-
-.story-loja-text {
-    color: #cbd5e1;
-    font-size: 40px;
-    margin-top: 20px;
-    margin-bottom: 30px;
-}
-
-.story-img-box {
-    background: #fff;
-    width: 900px;
-    height: 700px;
-    border-radius: 40px;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    overflow: hidden;
-    padding: 30px;
-}
-
-#st-img {
-    max-width: 100%;
-    max-height: 100%;
-    object-fit: contain;
-}
-
-.story-badges {
-    display: flex;
-    justify-content: space-between;
-    width: 900px;
-    margin-top: 40px;
-}
-
-.badge-red {
-    background: #ef4444;
-    color: #fff;
-    font-size: 50px;
-    font-weight: 800;
-    padding: 20px 40px;
-    border-radius: 20px;
-}
-
-.badge-yellow {
-    background: #facc15;
-    color: #000;
-    font-size: 50px;
-    font-weight: 800;
-    padding: 20px 40px;
-    border-radius: 20px;
-}
-
-.story-preco-de {
-    color: #cbd5e1;
-    font-size: 55px;
-    margin-top: 60px;
-}
-
-.story-preco-por {
-    background: #fff;
-    border-radius: 30px;
-    padding: 30px 100px;
-    margin-top: 10px;
-}
-
-#st-por {
-    color: #059669; 
-    font-size: 130px;
-    font-weight: 900;
-    letter-spacing: -5px;
-}
-
-.story-cupom {
-    border: 5px solid #facc15;
-    color: #facc15;
-    font-size: 55px;
-    font-weight: 800;
-    padding: 25px 60px;
-    border-radius: 25px;
-    margin-top: 40px;
-}
